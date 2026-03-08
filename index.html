@@ -55,6 +55,17 @@ body{font-family:'Outfit',sans-serif;background:#F8F6F3;color:#1A1A1A;-webkit-fo
 .main-content{max-width:1280px;margin:0 auto;padding:24px 20px;width:100%;flex:1}
 .hero-banner{background:linear-gradient(135deg,#1B3A5C 0%,#122840 100%);border-radius:16px;padding:48px 40px;margin-bottom:32px;position:relative;overflow:hidden}
 .hero-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:#E87A1D;opacity:.08;border-radius:50%}
+.carousel-container{position:relative;border-radius:16px;overflow:hidden;margin-bottom:32px}
+.carousel-track{display:flex;transition:transform .5s ease-in-out;will-change:transform}
+.carousel-slide{min-width:100%;position:relative;border-radius:16px;padding:48px 40px;overflow:hidden}
+.carousel-slide::before{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:#E87A1D;opacity:.08;border-radius:50%}
+.carousel-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
+.carousel-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.4);border:none;cursor:pointer;transition:all .3s;padding:0}
+.carousel-dot.active{background:#E87A1D;width:28px;border-radius:5px}
+.carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:5;transition:background .2s;backdrop-filter:blur(4px)}
+.carousel-arrow:hover{background:rgba(255,255,255,.3)}
+.carousel-arrow.left{left:16px}
+.carousel-arrow.right{right:16px}
 .hero-tag{display:inline-block;background:#E87A1D;color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
 .hero-title{font-size:36px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.1;max-width:600px}
 .hero-subtitle{font-size:16px;color:rgba(255,255,255,.7);margin-bottom:24px;max-width:500px}
@@ -212,6 +223,10 @@ body{font-family:'Outfit',sans-serif;background:#F8F6F3;color:#1A1A1A;-webkit-fo
   .category-grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .benefits-bar{grid-template-columns:1fr;gap:8px}
   .hero-banner{padding:28px 20px;border-radius:12px}
+  .carousel-slide{padding:28px 20px}
+  .carousel-arrow{width:32px;height:32px;font-size:16px}
+  .carousel-arrow.left{left:8px}
+  .carousel-arrow.right{right:8px}
   .hero-title{font-size:24px}
   .hero-subtitle{font-size:14px}
   .product-detail{grid-template-columns:1fr;gap:20px;padding:20px}
@@ -247,9 +262,9 @@ const CONFIG = {
   INSTAGRAM: "@ferramentasvalfre",
   INSTAGRAM_URL: "https://instagram.com/ferramentasvalfre",
   WHATSAPP_URL: "https://wa.me/5527998255545",
-  TRAY_API_URL: "https://1225878.commercesuite.com.br/web_api",
-  TRAY_ACCESS_TOKEN: "APP_ID-8121-STORE_ID-1225878-3871fcd14093608234062bca8b32886dec449f79df1e1e7cf5dc24c3fb52ea42",
-  TRAY_STORE_ID: "1225878",
+  TRAY_API_URL: "",
+  TRAY_ACCESS_TOKEN: "",
+  TRAY_STORE_ID: "",
 };
 
 // ============================================================
@@ -313,10 +328,36 @@ const TrayAPI = {
   async getProducts(params={}) {
     if (!CONFIG.TRAY_API_URL) return null;
     try {
-      const url = CONFIG.TRAY_API_URL + "/web_api/products/?access_token=" + CONFIG.TRAY_ACCESS_TOKEN + "&limit=" + (params.limit||20);
+      const url = CONFIG.TRAY_API_URL + "/web_api/products/?access_token=" + CONFIG.TRAY_ACCESS_TOKEN + "&limit=" + (params.limit||50) + "&available=1";
+      const res = await fetch(url);
+      return await res.json();
+    } catch(e) { console.error("Tray API error:", e); return null; }
+  },
+  async getProductsByCategory(catId) {
+    if (!CONFIG.TRAY_API_URL) return null;
+    try {
+      const url = CONFIG.TRAY_API_URL + "/web_api/products/?access_token=" + CONFIG.TRAY_ACCESS_TOKEN + "&limit=50&available=1&category_id=" + catId;
       const res = await fetch(url);
       return await res.json();
     } catch(e) { return null; }
+  },
+  parseTrayProduct(p) {
+    const img = p.ProductImage && p.ProductImage.length > 0 ? (p.ProductImage[0].https || p.ProductImage[0].http || null) : null;
+    return {
+      id: parseInt(p.id),
+      name: p.name || "",
+      price: parseFloat(p.price) || 0,
+      promotional_price: parseFloat(p.promotional_price) || 0,
+      brand: p.brand || "",
+      category_id: parseInt(p.category_id) || 0,
+      stock: parseInt(p.stock) || 0,
+      description: p.description_small || p.description || "",
+      image: img,
+      ean: p.ean || "",
+      slug: p.slug || "",
+      available: p.available,
+      all_categories: p.all_categories || []
+    };
   },
   getCheckoutURL(sessionId) {
     return CONFIG.TRAY_API_URL + "/loja/carrinho.php?loja=" + CONFIG.TRAY_STORE_ID + "&transID=" + sessionId;
@@ -329,9 +370,12 @@ const TrayAPI = {
 const formatPrice = (p) => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(p);
 
 const getProductImage = (product) => {
-  if (product.image) return product.image;
+  if (product.image && product.image.startsWith("http")) return product.image;
+  if (product.ProductImage && product.ProductImage.length > 0) {
+    return product.ProductImage[0].https || product.ProductImage[0].http || "";
+  }
   const colors = ["#2C5F8A","#3D7AB5","#4A8BC4","#1B4B6E","#355E80"];
-  const bg = colors[product.id % colors.length];
+  const bg = colors[(product.id || 0) % colors.length];
   return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="'+bg+'"/><text x="200" y="180" text-anchor="middle" fill="white" font-family="Arial" font-size="48">🔧</text><text x="200" y="230" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">'+(product.brand||"VALFRE")+'</text></svg>');
 };
 
@@ -419,7 +463,16 @@ function App() {
 
   React.useEffect(() => {
     if (CONFIG.TRAY_API_URL && CONFIG.TRAY_ACCESS_TOKEN) {
-      TrayAPI.getProducts().then(d => { if(d && d.Products){ setProducts(d.Products.map(p=>p.Product)); setTrayOk(true); }});
+      TrayAPI.getProducts({limit:50}).then(d => {
+        if(d && d.Products && d.Products.length > 0){
+          const parsed = d.Products.map(item => TrayAPI.parseTrayProduct(item.Product));
+          setProducts(parsed);
+          setTrayOk(true);
+          console.log("Tray: " + parsed.length + " produtos carregados!");
+        } else {
+          console.warn("Tray: nenhum produto retornado", d);
+        }
+      }).catch(e => console.error("Tray error:", e));
     }
   }, []);
 
@@ -449,8 +502,13 @@ function App() {
   const getFiltered = (catId) => {
     const cat = CATEGORIES.find(c=>c.id===catId);
     if(!cat) return [];
-    const ids = [catId, ...cat.children.map(ch=>ch.id)];
-    let f = products.filter(p=>ids.includes(p.category_id));
+    const ids = [catId, ...cat.children.map(ch=>ch.id)].map(String);
+    let f = products.filter(p => {
+      const pCatId = String(p.category_id);
+      if (ids.includes(pCatId)) return true;
+      if (p.all_categories && p.all_categories.some(c => ids.includes(String(c)))) return true;
+      return false;
+    });
     if(sortBy==="price-asc") f.sort((a,b)=>a.price-b.price);
     if(sortBy==="price-desc") f.sort((a,b)=>b.price-a.price);
     if(sortBy==="name") f.sort((a,b)=>a.name.localeCompare(b.name));
@@ -477,7 +535,7 @@ function App() {
       {/* HEADER */}
       <header className="main-header"><div className="header-inner">
         <button className="menu-toggle" onClick={()=>setMobileMenu(true)}><Ico.Menu/></button>
-        <div className="logo-area" onClick={()=>nav("home")}><div><div className="logo-text"><span>VAL</span>FRE</div><div className="logo-sub">Ferramentas</div></div></div>
+        <div className="logo-area" onClick={()=>nav("home")}><img src="/logo.png" alt="Ferramentas Valfre" style={{height:48,borderRadius:6}}/></div>
         <div className="search-container">
           <input className="search-input" placeholder="O que você está procurando?" value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doSearch()}/>
           <button className="search-btn" onClick={doSearch}><Ico.Search/></button>
@@ -499,12 +557,40 @@ function App() {
 
         {/* HOME */}
         {page==="home" && <>
-          <div className="hero-banner">
-            <div className="hero-tag">Novidades</div>
-            <h1 className="hero-title">As Melhores Ferramentas para Seu Projeto</h1>
-            <p className="hero-subtitle">Ferramentas profissionais das melhores marcas com preços imbatíveis. Entrega para todo o Brasil.</p>
-            <button className="hero-btn" onClick={()=>nav("category",CATEGORIES[0])}>Ver Produtos <Ico.ChevRight/></button>
-          </div>
+          {/* CAROUSEL */}
+          {(()=>{
+            const slides = [
+              { bg:"linear-gradient(135deg,#1B3A5C 0%,#122840 100%)", tag:"Novidades", title:"As Melhores Ferramentas para Seu Projeto", sub:"Ferramentas profissionais das melhores marcas com preços imbatíveis. Entrega para todo o Brasil.", btn:"Ver Produtos", cat:0 },
+              { bg:"linear-gradient(135deg,#E87A1D 0%,#D06A10 100%)", tag:"Ofertas", title:"Até 40% OFF em Ferramentas Elétricas", sub:"Furadeiras, parafusadeiras, esmerilhadeiras e muito mais com desconto imperdível!", btn:"Aproveitar", cat:1 },
+              { bg:"linear-gradient(135deg,#2C5F8A 0%,#1B3A5C 100%)", tag:"Construção", title:"Tudo para Sua Obra em Um Só Lugar", sub:"Ferramentas para pedreiro, pintura, soldagem e muito mais. Qualidade garantida.", btn:"Ver Categorias", cat:2 },
+              { bg:"linear-gradient(135deg,#122840 0%,#0D1B2A 100%)", tag:"Frete Grátis", title:"Entrega para Todo o Brasil", sub:"Compre pelo site e receba em casa com rapidez e segurança. Parcele em até 12x sem juros!", btn:"Comprar Agora", cat:0 },
+              { bg:"linear-gradient(135deg,#355E80 0%,#1B3A5C 100%)", tag:"WhatsApp", title:"Atendimento Personalizado", sub:"Tire suas dúvidas e faça seu pedido pelo WhatsApp. Estamos prontos para te atender!", btn:"Falar no WhatsApp", cat:-1 },
+            ];
+            const [ci, setCi] = React.useState(0);
+            const timerRef = React.useRef(null);
+            const startTimer = () => { clearInterval(timerRef.current); timerRef.current = setInterval(()=>{ setCi(p=>(p+1)%slides.length); }, 5000); };
+            React.useEffect(()=>{ startTimer(); return ()=>clearInterval(timerRef.current); },[]);
+            const goTo = (i) => { setCi(i); startTimer(); };
+            const prev = () => { setCi(p=>(p-1+slides.length)%slides.length); startTimer(); };
+            const next = () => { setCi(p=>(p+1)%slides.length); startTimer(); };
+            return (
+              <div className="carousel-container">
+                <div className="carousel-track" style={{transform:"translateX(-"+ci*100+"%)"}}>
+                  {slides.map((s,i)=>(
+                    <div key={i} className="carousel-slide" style={{background:s.bg}}>
+                      <div className="hero-tag">{s.tag}</div>
+                      <h1 className="hero-title">{s.title}</h1>
+                      <p className="hero-subtitle">{s.sub}</p>
+                      <button className="hero-btn" onClick={()=>s.cat===-1?window.open(CONFIG.WHATSAPP_URL,"_blank"):nav("category",CATEGORIES[s.cat])}>{s.btn} <Ico.ChevRight/></button>
+                    </div>
+                  ))}
+                </div>
+                <button className="carousel-arrow left" onClick={prev}>❮</button>
+                <button className="carousel-arrow right" onClick={next}>❯</button>
+                <div className="carousel-dots">{slides.map((_,i)=><button key={i} className={"carousel-dot"+(ci===i?" active":"")} onClick={()=>goTo(i)}/>)}</div>
+              </div>
+            );
+          })()}
           <div className="benefits-bar">
             <div className="benefit-item"><div className="benefit-icon"><Ico.Truck/></div><div className="benefit-text"><h4>Entrega p/ Todo Brasil</h4><p>Frete calculado no checkout</p></div></div>
             <div className="benefit-item"><div className="benefit-icon"><Ico.Shield/></div><div className="benefit-text"><h4>Compra Segura</h4><p>Site 100% protegido</p></div></div>
@@ -598,7 +684,7 @@ function App() {
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-brand">
-            <h3><span>VAL</span>FRE</h3>
+            <h3><span style={{color:"#E87A1D"}}>FERRAMENTAS</span> VALFRE</h3>
             <p>Ferramentas Valfre — Sua loja de ferramentas e equipamentos profissionais.</p>
             <p style={{fontSize:12}}>CNPJ: {CONFIG.CNPJ}</p>
             <div className="footer-social" style={{marginTop:12}}>
