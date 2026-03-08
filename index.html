@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#1B3A5C" />
+  <meta name="description" content="Ferramentas Valfre - Sua loja de ferramentas e equipamentos profissionais. Melhores marcas, preços imbatíveis e entrega para todo o Brasil." />
+  <meta name="keywords" content="ferramentas, ferramentas manuais, ferramentas elétricas, furadeira, parafusadeira, construção, Valfre" />
+  <meta property="og:title" content="Ferramentas Valfre - Ferramentas Profissionais" />
+  <meta property="og:description" content="As melhores ferramentas com preços imbatíveis." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Valfre" />
+  <title>Ferramentas Valfre | Ferramentas e Equipamentos Profissionais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:#F8F6F3;color:#1A1A1A;-webkit-font-smoothing:antialiased}
+.app-container{min-height:100vh;display:flex;flex-direction:column}
+.top-bar{background:#122840;color:#fff;font-size:12px;padding:6px 0}
+.top-bar-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
+.top-bar a{color:#D1D1D1;text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .2s}
+.top-bar a:hover{color:#E87A1D}
+.main-header{background:#1B3A5C;padding:12px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:20px}
+.logo-area{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
+.logo-text{font-weight:900;font-size:22px;color:#fff;line-height:1}
+.logo-text span{color:#E87A1D}
+.logo-sub{font-size:10px;color:#D1D1D1;font-weight:400;letter-spacing:2px;text-transform:uppercase}
+.search-container{flex:1;max-width:600px;position:relative}
+.search-input{width:100%;padding:12px 48px 12px 16px;border:2px solid transparent;border-radius:8px;font-size:14px;font-family:'Outfit',sans-serif;background:rgba(255,255,255,.12);color:#fff;outline:none;transition:all .3s}
+.search-input::placeholder{color:rgba(255,255,255,.5)}
+.search-input:focus{background:#fff;color:#1A1A1A;border-color:#E87A1D}
+.search-input:focus::placeholder{color:#888}
+.search-btn{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:#E87A1D;border:none;color:#fff;width:38px;height:38px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.search-btn:hover{background:#D06A10}
+.header-actions{display:flex;align-items:center;gap:16px}
+.header-action-btn{background:none;border:none;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-family:'Outfit',sans-serif;opacity:.85;transition:opacity .2s;position:relative}
+.header-action-btn:hover{opacity:1}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:#E87A1D;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.menu-toggle{display:none;background:none;border:none;color:#fff;cursor:pointer;padding:4px}
+.category-nav{background:#fff;border-bottom:1px solid #E8E8E8;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.category-nav::-webkit-scrollbar{display:none}
+.category-nav-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:stretch}
+.cat-nav-item{padding:12px 16px;font-size:13px;font-weight:500;color:#444;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:6px;background:none;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif}
+.cat-nav-item:hover,.cat-nav-item.active{color:#E87A1D;border-bottom-color:#E87A1D;background:#FFF3E8}
+.cat-nav-item.active{font-weight:600}
+.main-content{max-width:1280px;margin:0 auto;padding:24px 20px;width:100%;flex:1}
+.hero-banner{background:linear-gradient(135deg,#1B3A5C 0%,#122840 100%);border-radius:16px;padding:48px 40px;margin-bottom:32px;position:relative;overflow:hidden}
+.hero-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;background:#E87A1D;opacity:.08;border-radius:50%}
+.hero-tag{display:inline-block;background:#E87A1D;color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.hero-title{font-size:36px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.1;max-width:600px}
+.hero-subtitle{font-size:16px;color:rgba(255,255,255,.7);margin-bottom:24px;max-width:500px}
+.hero-btn{display:inline-flex;align-items:center;gap:8px;background:#E87A1D;color:#fff;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .3s}
+.hero-btn:hover{background:#D06A10;transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,122,29,.3)}
+.benefits-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
+.benefit-item{display:flex;align-items:center;gap:12px;padding:16px;background:#fff;border-radius:12px;border:1px solid #E8E8E8}
+.benefit-icon{width:44px;height:44px;border-radius:10px;background:#FFF3E8;display:flex;align-items:center;justify-content:center;color:#E87A1D;flex-shrink:0;font-size:20px}
+.benefit-text h4{font-size:13px;font-weight:600;color:#1A1A1A;margin-bottom:2px}
+.benefit-text p{font-size:11px;color:#888}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.section-title{font-size:22px;font-weight:700;color:#1B3A5C;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:4px;height:24px;background:#E87A1D;border-radius:2px}
+.section-link{color:#E87A1D;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px}
+.section-link:hover{text-decoration:underline}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:40px}
+.product-card{background:#fff;border-radius:12px;overflow:hidden;border:1px solid #E8E8E8;transition:all .3s;cursor:pointer;position:relative}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.1);border-color:#E87A1D}
+.product-badge{position:absolute;top:12px;left:12px;background:#DC3545;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;z-index:2}
+.product-wishlist{position:absolute;top:12px;right:12px;background:#fff;border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.1);z-index:2;color:#888;transition:all .2s}
+.product-wishlist:hover{color:#DC3545}
+.product-image-area{width:100%;aspect-ratio:1;background:#F5F5F5;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-image-area img{width:100%;height:100%;object-fit:cover}
+.product-info{padding:16px}
+.product-brand{font-size:11px;color:#888;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.product-name{font-size:14px;font-weight:500;color:#1A1A1A;margin-bottom:8px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-old-price{font-size:12px;color:#888;text-decoration:line-through}
+.product-price{font-size:20px;font-weight:700;color:#E87A1D}
+.product-installments{font-size:11px;color:#888;margin-top:2px}
+.product-add-btn{width:100%;padding:10px;background:#1B3A5C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s;margin-top:12px}
+.product-add-btn:hover{background:#E87A1D}
+.category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:40px}
+.category-card{background:#fff;border-radius:12px;padding:24px 16px;text-align:center;border:1px solid #E8E8E8;cursor:pointer;transition:all .3s}
+.category-card:hover{border-color:#E87A1D;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.category-icon{font-size:32px;margin-bottom:8px}
+.category-label{font-size:13px;font-weight:600;color:#1B3A5C;line-height:1.2}
+.product-detail{display:grid;grid-template-columns:1fr 1fr;gap:40px;background:#fff;border-radius:16px;padding:32px;margin-bottom:32px}
+.pd-image-area{aspect-ratio:1;background:#F5F5F5;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pd-image-area img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.pd-info{display:flex;flex-direction:column}
+.pd-breadcrumb{font-size:12px;color:#888;margin-bottom:8px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.pd-breadcrumb span{cursor:pointer}
+.pd-breadcrumb span:hover{color:#E87A1D}
+.pd-brand{font-size:13px;color:#E87A1D;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.pd-name{font-size:24px;font-weight:700;color:#1A1A1A;margin-bottom:8px;line-height:1.2}
+.pd-sku{font-size:12px;color:#888;margin-bottom:16px}
+.pd-stars{display:flex;gap:2px;margin-bottom:20px}
+.pd-price-area{background:#F5F5F5;padding:20px;border-radius:12px;margin-bottom:20px}
+.pd-old-price{font-size:14px;color:#888;text-decoration:line-through}
+.pd-price{font-size:32px;font-weight:800;color:#E87A1D;margin-bottom:4px}
+.pd-installments{font-size:14px;color:#444}
+.pd-pix{margin-top:8px;font-size:13px;color:#28A745;font-weight:600}
+.pd-stock{font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:6px;color:#28A745}
+.pd-stock .dot{width:8px;height:8px;border-radius:50%;background:#28A745}
+.pd-buttons{display:flex;gap:12px;margin-bottom:20px}
+.pd-add-cart{flex:1;padding:14px;background:#E87A1D;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s}
+.pd-add-cart:hover{background:#D06A10;transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,122,29,.3)}
+.pd-buy-now{flex:1;padding:14px;background:#1B3A5C;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s}
+.pd-buy-now:hover{background:#122840}
+.pd-desc{font-size:14px;line-height:1.6;color:#444;border-top:1px solid #E8E8E8;padding-top:20px}
+.pd-desc h3{font-size:16px;font-weight:600;color:#1B3A5C;margin-bottom:8px}
+.cart-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:auto}
+.cart-sidebar{position:fixed;top:0;right:-420px;bottom:0;width:400px;max-width:100%;background:#fff;z-index:201;display:flex;flex-direction:column;transition:right .3s;box-shadow:-4px 0 24px rgba(0,0,0,.15)}
+.cart-sidebar.open{right:0}
+.cart-header{padding:20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E8E8E8}
+.cart-header h2{font-size:18px;font-weight:700;color:#1B3A5C}
+.cart-close{background:none;border:none;cursor:pointer;color:#444;padding:4px;font-size:24px}
+.cart-items{flex:1;overflow-y:auto;padding:16px 20px}
+.cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F5F5F5}
+.cart-item-img{width:64px;height:64px;border-radius:8px;background:#F5F5F5;flex-shrink:0;overflow:hidden}
+.cart-item-img img{width:100%;height:100%;object-fit:cover}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:13px;font-weight:500;margin-bottom:4px}
+.cart-item-price{font-size:15px;font-weight:700;color:#E87A1D}
+.cart-item-actions{display:flex;align-items:center;gap:8px;margin-top:6px}
+.cart-item-qty{display:flex;align-items:center;border:1px solid #D1D1D1;border-radius:6px;overflow:hidden}
+.cart-item-qty button{width:28px;height:28px;border:none;background:#F5F5F5;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.cart-item-qty span{width:32px;text-align:center;font-size:13px;font-weight:600}
+.cart-item-remove{background:none;border:none;color:#DC3545;cursor:pointer;padding:4px;font-size:18px}
+.cart-footer{padding:20px;border-top:1px solid #E8E8E8}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:16px}
+.cart-total-label{font-size:16px;font-weight:500}
+.cart-total-value{font-size:22px;font-weight:800;color:#E87A1D}
+.cart-checkout-btn{width:100%;padding:14px;background:#E87A1D;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.cart-checkout-btn:hover{background:#D06A10}
+.cart-continue{width:100%;padding:12px;background:none;color:#1B3A5C;border:2px solid #1B3A5C;border-radius:10px;font-size:14px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s}
+.cart-continue:hover{background:#1B3A5C;color:#fff}
+.cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;gap:12px}
+.cart-empty span{font-size:48px}
+.whatsapp-float{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;color:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(37,211,102,.4);z-index:150;transition:all .3s;text-decoration:none}
+.whatsapp-float:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(37,211,102,.5)}
+.footer{background:#122840;color:#fff;padding:48px 0 0;margin-top:auto}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.footer-brand h3{font-size:24px;font-weight:800;margin-bottom:12px}
+.footer-brand h3 span{color:#E87A1D}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:12px}
+.footer-social{display:flex;gap:12px}
+.footer-social a{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:all .2s}
+.footer-social a:hover{background:#E87A1D}
+.footer-col h4{font-size:14px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;color:#E87A1D}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:10px}
+.footer-col a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .2s;cursor:pointer}
+.footer-col a:hover{color:#E87A1D}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:20px 0;margin-top:40px;text-align:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.4);max-width:1280px;margin:0 auto;padding:0 20px}
+.mobile-menu-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-menu-overlay.open{opacity:1;pointer-events:auto}
+.mobile-menu{position:fixed;top:0;left:-300px;bottom:0;width:280px;background:#fff;z-index:301;transition:left .3s;overflow-y:auto}
+.mobile-menu.open{left:0}
+.mobile-menu-header{background:#1B3A5C;padding:20px;display:flex;align-items:center;justify-content:space-between}
+.mobile-menu-header h3{color:#fff;font-size:16px}
+.mobile-menu-close{background:none;border:none;color:#fff;cursor:pointer;font-size:24px}
+.mobile-cat-item{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;font-size:14px;font-weight:500;color:#444;border:none;background:none;cursor:pointer;font-family:'Outfit',sans-serif;text-align:left;transition:background .2s}
+.mobile-cat-item:hover{background:#FFF3E8;color:#E87A1D}
+.mobile-cat-children{background:#F5F5F5}
+.mobile-cat-child{display:block;width:100%;padding:10px 20px 10px 40px;font-size:13px;color:#444;border:none;background:none;cursor:pointer;font-family:'Outfit',sans-serif;text-align:left}
+.mobile-cat-child:hover{color:#E87A1D}
+.mobile-menu-links{border-top:1px solid #E8E8E8;padding:12px 0}
+.mobile-link{display:block;width:100%;padding:12px 20px;font-size:14px;color:#444;border:none;background:none;cursor:pointer;font-family:'Outfit',sans-serif;text-align:left}
+.mobile-link:hover{background:#FFF3E8;color:#E87A1D}
+.policy-page{background:#fff;border-radius:16px;padding:40px;margin-bottom:32px}
+.policy-page h1{font-size:28px;font-weight:800;color:#1B3A5C;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #E87A1D}
+.policy-page h2{font-size:18px;font-weight:700;color:#1B3A5C;margin:24px 0 12px}
+.policy-page p{font-size:14px;line-height:1.8;color:#444;margin-bottom:12px}
+.policy-page ul{padding-left:24px;margin-bottom:12px}
+.policy-page li{font-size:14px;line-height:1.8;color:#444;margin-bottom:4px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#1B3A5C;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:16px;font-family:'Outfit',sans-serif;padding:8px 12px;border-radius:8px;transition:all .2s}
+.back-btn:hover{background:#FFF3E8;color:#E87A1D}
+.category-page-layout{display:grid;grid-template-columns:240px 1fr;gap:24px}
+.filter-sidebar{background:#fff;border-radius:12px;padding:20px;border:1px solid #E8E8E8;height:fit-content;position:sticky;top:100px}
+.filter-title{font-size:16px;font-weight:700;color:#1B3A5C;margin-bottom:16px}
+.filter-group{margin-bottom:20px}
+.filter-group h4{font-size:13px;font-weight:600;color:#444;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.filter-option{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:13px;color:#444}
+.filter-option input{accent-color:#E87A1D}
+.sort-select{padding:8px 12px;border:1px solid #D1D1D1;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;color:#444;background:#fff;cursor:pointer;width:100%}
+@media(max-width:1024px){
+  .product-grid{grid-template-columns:repeat(3,1fr)}
+  .category-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-inner{grid-template-columns:repeat(2,1fr)}
+  .benefits-bar{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .top-bar{display:none}
+  .menu-toggle{display:flex}
+  .header-actions .header-action-btn>span.label-text{display:none}
+  .search-container{display:none}
+  .header-inner{gap:12px}
+  .logo-text{font-size:18px}
+  .logo-sub{font-size:8px}
+  .category-nav{display:none}
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .category-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .benefits-bar{grid-template-columns:1fr;gap:8px}
+  .hero-banner{padding:28px 20px;border-radius:12px}
+  .hero-title{font-size:24px}
+  .hero-subtitle{font-size:14px}
+  .product-detail{grid-template-columns:1fr;gap:20px;padding:20px}
+  .pd-price{font-size:26px}
+  .pd-buttons{flex-direction:column}
+  .category-page-layout{grid-template-columns:1fr}
+  .filter-sidebar{position:static}
+  .footer-inner{grid-template-columns:1fr;gap:24px}
+  .main-content{padding:16px}
+  .policy-page{padding:20px}
+  .policy-page h1{font-size:22px}
+  .section-title{font-size:18px}
+}
+@media(max-width:480px){
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .product-info{padding:10px}
+  .product-name{font-size:12px}
+  .product-price{font-size:16px}
+  .product-add-btn{padding:8px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ============================================================
+// CONFIG — PREENCHA COM SEUS DADOS DA TRAY
+// ============================================================
+const CONFIG = {
+  STORE_NAME: "Ferramentas Valfre",
+  CNPJ: "52.749.158/0001-62",
+  WHATSAPP: "27998255545",
+  INSTAGRAM: "@ferramentasvalfre",
+  INSTAGRAM_URL: "https://instagram.com/ferramentasvalfre",
+  WHATSAPP_URL: "https://wa.me/5527998255545",
+  TRAY_API_URL: "",
+  TRAY_ACCESS_TOKEN: "",
+  TRAY_STORE_ID: "",
+};
+
+// ============================================================
+// CATEGORIES (from your CSV)
+// ============================================================
+const CATEGORIES = [
+  { id:11, name:"Ferramentas Manuais", slug:"ferramentas-manuais", icon:"🔧", children:[
+    {id:13,name:"Martelos"},{id:39,name:"Alicates"},{id:41,name:"Chaves"},{id:43,name:"Arcos de Serra"},{id:45,name:"Serrotes"},{id:47,name:"Colheres de Pedreiro"},{id:49,name:"Desempenadeiras"},{id:53,name:"Estiletes"},{id:59,name:"Ferramentas Diversas"},{id:139,name:"Medição e Nivelamento"},{id:141,name:"Organização de Ferramentas"},{id:143,name:"Iluminação Portátil"}
+  ]},
+  { id:17, name:"Ferramentas Elétricas", slug:"ferramentas-eletricas", icon:"⚡", children:[
+    {id:61,name:"Furadeiras"},{id:63,name:"Parafusadeiras"},{id:65,name:"Esmerilhadeiras"},{id:67,name:"Serras Elétricas"},{id:71,name:"Acessórios p/ Ferramentas Elétricas"},{id:145,name:"Lixadeiras"}
+  ]},
+  { id:25, name:"Construção e Obra", slug:"construcao-e-obra", icon:"🏗️", children:[
+    {id:87,name:"Ferramentas para Pedreiro"},{id:89,name:"Ferramentas para Pintura"},{id:91,name:"Edição e Nivelamento"},{id:93,name:"Argamassa e Rejunte"},{id:95,name:"Espátulas"},{id:97,name:"Desempenadeiras"},{id:147,name:"Soldagem"}
+  ]},
+  { id:23, name:"Acessórios e Peças", slug:"acessorios-e-pecas", icon:"🔩", children:[
+    {id:73,name:"Lâminas"},{id:75,name:"Discos de Corte"},{id:77,name:"Brocas"},{id:79,name:"Mandris"},{id:81,name:"Adaptadores"},{id:83,name:"Extensões"},{id:85,name:"Peças de Reposição"}
+  ]},
+  { id:27, name:"Elétricas", slug:"eletricas", icon:"💡", children:[
+    {id:99,name:"Iluminação"},{id:101,name:"Lâmpadas"},{id:103,name:"Soquetes"},{id:105,name:"Chuveiros"},{id:107,name:"Disjuntores"},{id:109,name:"Ebulidores"},{id:111,name:"Extensões Elétricas"}
+  ]},
+  { id:29, name:"Climatização e Ventilação", slug:"climatizacao-ventilacao", icon:"❄️", children:[
+    {id:113,name:"Ventiladores"},{id:115,name:"Climatizadores"},{id:117,name:"Aquecedores"},{id:119,name:"Refrigeração"}
+  ]},
+  { id:37, name:"Automotivo e Manutenção", slug:"automotivo-manutencao", icon:"🚗", children:[
+    {id:129,name:"Lubrificantes"},{id:131,name:"Aditivos"},{id:133,name:"Manutenção Automotiva"}
+  ]},
+  { id:31, name:"Casa e Organização", slug:"casa-organizacao", icon:"🏠", children:[
+    {id:121,name:"Organizadores"},{id:123,name:"Suportes de Parede"},{id:125,name:"Artigos de Cozinha"},{id:127,name:"Utilidades Domésticas"}
+  ]},
+  { id:35, name:"Construção", slug:"construcao", icon:"🧱", children:[] },
+  { id:33, name:"Ofertas e Promoções", slug:"ofertas-promocoes", icon:"🏷️", children:[] },
+];
+
+// ============================================================
+// DEMO PRODUCTS
+// ============================================================
+const DEMO_PRODUCTS = [
+  {id:1,name:"Furadeira de Impacto 750W",price:289.90,promotional_price:249.90,brand:"DeWalt",category_id:61,stock:15,description:"Furadeira de impacto profissional com 750W de potência."},
+  {id:2,name:"Jogo de Chaves Allen 9 Peças",price:45.90,promotional_price:0,brand:"Tramontina",category_id:41,stock:30,description:"Jogo completo em aço cromo vanádio."},
+  {id:3,name:"Esmerilhadeira Angular 4½\" 850W",price:329.90,promotional_price:299.90,brand:"Bosch",category_id:65,stock:8,description:"Esmerilhadeira angular profissional com sistema anti-vibração."},
+  {id:4,name:"Martelo Unha 27mm",price:59.90,promotional_price:0,brand:"Stanley",category_id:13,stock:25,description:"Martelo unha com cabo de fibra de vidro."},
+  {id:5,name:"Serra Circular 7¼\" 1400W",price:499.90,promotional_price:459.90,brand:"Makita",category_id:67,stock:5,description:"Serra circular profissional com disco de 7¼ polegadas."},
+  {id:6,name:"Parafusadeira à Bateria 12V",price:399.90,promotional_price:349.90,brand:"DeWalt",category_id:63,stock:12,description:"Parafusadeira/furadeira à bateria com 2 baterias."},
+  {id:7,name:"Alicate Universal 8\"",price:39.90,promotional_price:0,brand:"Tramontina",category_id:39,stock:40,description:"Alicate universal profissional com cabo isolado até 1000V."},
+  {id:8,name:"Disco de Corte 4½\" (Pack 10)",price:29.90,promotional_price:24.90,brand:"Norton",category_id:75,stock:50,description:"Pack com 10 discos de corte para metais ferrosos."},
+  {id:9,name:"Nível de Bolha 30cm",price:25.90,promotional_price:0,brand:"Vonder",category_id:139,stock:20,description:"Nível de bolha com base magnética e 3 bolhas de precisão."},
+  {id:10,name:"Lixadeira Orbital 200W",price:199.90,promotional_price:179.90,brand:"Black+Decker",category_id:145,stock:10,description:"Lixadeira orbital com sistema de coleta de pó."},
+  {id:11,name:"Ventilador de Mesa 40cm",price:159.90,promotional_price:139.90,brand:"Ventisol",category_id:113,stock:18,description:"Ventilador de mesa 3 velocidades, motor silencioso."},
+  {id:12,name:"Kit Ferramentas p/ Pedreiro 5 Pçs",price:89.90,promotional_price:0,brand:"Vonder",category_id:87,stock:15,description:"Kit completo com colher, desempenadeira, prumo, esquadro e nível."},
+  {id:13,name:"Jogo de Brocas HSS 13 Peças",price:69.90,promotional_price:59.90,brand:"Bosch",category_id:77,stock:22,description:"Brocas HSS de 1,5mm a 6,5mm para metal, madeira e plástico."},
+  {id:14,name:"Extensão Elétrica 10m 3 Tomadas",price:49.90,promotional_price:0,brand:"Daneva",category_id:111,stock:30,description:"Extensão com 10 metros, cabo PP 2x1,0mm²."},
+  {id:15,name:"Óleo Lubrificante WD-40 300ml",price:34.90,promotional_price:29.90,brand:"WD-40",category_id:129,stock:35,description:"Lubrificante multiuso spray 300ml."},
+  {id:16,name:"Suporte TV Articulado 32\"-55\"",price:129.90,promotional_price:109.90,brand:"ELG",category_id:123,stock:14,description:"Suporte articulado com inclinação e rotação ajustáveis."},
+];
+
+// ============================================================
+// TRAY API SERVICE
+// ============================================================
+const TrayAPI = {
+  async getProducts(params={}) {
+    if (!CONFIG.TRAY_API_URL) return null;
+    try {
+      const url = CONFIG.TRAY_API_URL + "/web_api/products/?access_token=" + CONFIG.TRAY_ACCESS_TOKEN + "&limit=" + (params.limit||20);
+      const res = await fetch(url);
+      return await res.json();
+    } catch(e) { return null; }
+  },
+  getCheckoutURL(sessionId) {
+    return CONFIG.TRAY_API_URL + "/loja/carrinho.php?loja=" + CONFIG.TRAY_STORE_ID + "&transID=" + sessionId;
+  }
+};
+
+// ============================================================
+// HELPERS
+// ============================================================
+const formatPrice = (p) => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(p);
+
+const getProductImage = (product) => {
+  if (product.image) return product.image;
+  const colors = ["#2C5F8A","#3D7AB5","#4A8BC4","#1B4B6E","#355E80"];
+  const bg = colors[product.id % colors.length];
+  return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="'+bg+'"/><text x="200" y="180" text-anchor="middle" fill="white" font-family="Arial" font-size="48">🔧</text><text x="200" y="230" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">'+(product.brand||"VALFRE")+'</text></svg>');
+};
+
+// ============================================================
+// SVG ICONS
+// ============================================================
+const Ico = {
+  Search: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Cart: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>,
+  User: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  Close: () => <span style={{fontSize:24}}>✕</span>,
+  ChevRight: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>,
+  ChevDown: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>,
+  WA: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
+  IG: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
+  Heart: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  Home: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  ArrowL: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+  Star: ({f}) => <svg width="16" height="16" viewBox="0 0 24 24" fill={f?"#F5A623":"none"} stroke="#F5A623" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Phone: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  Truck: () => <span>🚚</span>,
+  Shield: () => <span>🛡️</span>,
+  Card: () => <span>💳</span>,
+  Filter: () => <span>☰</span>,
+};
+
+// ============================================================
+// PRODUCT CARD
+// ============================================================
+function ProductCard({product, onClick, onAddToCart}) {
+  const hasPromo = product.promotional_price > 0 && product.promotional_price < product.price;
+  const discount = hasPromo ? Math.round((1 - product.promotional_price / product.price) * 100) : 0;
+  const dp = hasPromo ? product.promotional_price : product.price;
+  const inst = Math.min(12, Math.max(1, Math.floor(dp / 20)));
+  return (
+    <div className="product-card" onClick={() => onClick(product)}>
+      {hasPromo && <div className="product-badge">-{discount}%</div>}
+      <button className="product-wishlist" onClick={e=>{e.stopPropagation()}}><Ico.Heart/></button>
+      <div className="product-image-area"><img src={getProductImage(product)} alt={product.name} loading="lazy"/></div>
+      <div className="product-info">
+        <div className="product-brand">{product.brand}</div>
+        <div className="product-name">{product.name}</div>
+        {hasPromo && <div className="product-old-price">{formatPrice(product.price)}</div>}
+        <div className="product-price">{formatPrice(dp)}</div>
+        {inst > 1 && <div className="product-installments">até {inst}x de {formatPrice(dp/inst)}</div>}
+        <button className="product-add-btn" onClick={e=>{e.stopPropagation();onAddToCart(product)}}>Adicionar ao Carrinho</button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// POLICIES
+// ============================================================
+function PolicyPage({type, navigate}) {
+  const P = {
+    "termos-de-uso": { title:"Termos de Uso", c: <><h2>1. Aceitação dos Termos</h2><p>Ao acessar o site Ferramentas Valfre (CNPJ: {CONFIG.CNPJ}), você concorda com estes Termos de Uso.</p><h2>2. Uso do Site</h2><p>O site destina-se à venda de ferramentas e equipamentos. O uso é permitido apenas para fins legais.</p><h2>3. Conta do Usuário</h2><p>Para realizar compras, é necessário criar uma conta com informações verdadeiras. Você é responsável por manter a confidencialidade de sua conta.</p><h2>4. Produtos e Preços</h2><p>Preços e disponibilidade estão sujeitos a alteração sem aviso prévio. Reservamo-nos o direito de corrigir erros de preço.</p><h2>5. Propriedade Intelectual</h2><p>Todo conteúdo do site é protegido por direitos autorais da Ferramentas Valfre.</p><h2>6. Alterações</h2><p>Reservamo-nos o direito de modificar estes termos a qualquer momento.</p></> },
+    "politica-de-privacidade": { title:"Política de Privacidade", c: <><h2>1. Coleta de Dados</h2><p>Coletamos informações pessoais necessárias para processar pedidos: nome, CPF/CNPJ, endereço, e-mail, telefone e dados de pagamento.</p><h2>2. Uso das Informações</h2><p>Utilizamos para processar pedidos, enviar atualizações, melhorar serviços e cumprir obrigações legais.</p><h2>3. Compartilhamento</h2><p>Não vendemos seus dados. Compartilhamos apenas para processamento de pagamentos e entregas.</p><h2>4. Segurança (LGPD)</h2><p>Utilizamos criptografia SSL e operamos em conformidade com a LGPD. Você tem direito a acessar, corrigir e excluir seus dados.</p><h2>5. Cookies</h2><p>Utilizamos cookies para melhorar a navegação. Configure seu navegador para recusá-los se desejar.</p><h2>6. Contato</h2><p>Para exercer seus direitos LGPD: WhatsApp (27) 99825-5545.</p></> },
+    "politica-de-trocas": { title:"Política de Trocas e Devoluções", c: <><h2>1. Direito de Arrependimento</h2><p>Conforme Art. 49 do CDC, desistência em até 7 dias corridos após recebimento.</p><h2>2. Condições</h2><p>Produto em embalagem original, sem sinais de uso, com acessórios e nota fiscal.</p><h2>3. Como Solicitar</h2><p>Contate pelo WhatsApp (27) 99825-5545 informando número do pedido e motivo.</p><h2>4. Prazo</h2><p>Análise em até 5 dias úteis. Reembolso ou troca em até 10 dias úteis após aprovação.</p><h2>5. Produtos com Defeito</h2><p>Troca em até 30 dias (não duráveis) ou 90 dias (duráveis) conforme CDC.</p><h2>6. Frete</h2><p>Arrependimento: frete por conta do cliente. Defeito: frete por nossa conta.</p></> },
+    "politica-de-entrega": { title:"Política de Entrega", c: <><h2>1. Área de Entrega</h2><p>Entregamos em todo o Brasil. Prazo e custo variam por localidade e peso.</p><h2>2. Prazos</h2><p>Sudeste: 3-7 dias. Sul/Nordeste: 5-12 dias. Norte/Centro-Oeste: 7-15 dias úteis após confirmação de pagamento.</p><h2>3. Rastreamento</h2><p>Código de rastreamento enviado por e-mail após despacho.</p><h2>4. Recebimento</h2><p>Confira a integridade da embalagem. Em caso de avaria, recuse e nos contate.</p></> },
+    "politica-de-pagamento": { title:"Política de Pagamento", c: <><h2>1. Formas de Pagamento</h2><p>Cartões de crédito (Visa, Master, Elo, Amex), débito, PIX (com desconto) e boleto bancário.</p><h2>2. Parcelamento</h2><p>Até 12x sem juros no cartão de crédito.</p><h2>3. PIX</h2><p>Confirmação instantânea com desconto adicional de 5%.</p><h2>4. Segurança</h2><p>Pagamentos via Tray Pagamentos com certificação PCI DSS.</p><h2>5. Nota Fiscal</h2><p>NF-e emitida e enviada por e-mail automaticamente.</p></> },
+  };
+  const pol = P[type];
+  if (!pol) return null;
+  return <div><button className="back-btn" onClick={()=>navigate("home")}><Ico.ArrowL/> Voltar</button><div className="policy-page"><h1>{pol.title}</h1>{pol.c}<p style={{marginTop:24,fontSize:12,color:"#888"}}>Ferramentas Valfre — CNPJ: {CONFIG.CNPJ} — Março 2026</p></div></div>;
+}
+
+// ============================================================
+// MAIN APP
+// ============================================================
+function App() {
+  const [page, setPage] = React.useState("home");
+  const [selCat, setSelCat] = React.useState(null);
+  const [selProd, setSelProd] = React.useState(null);
+  const [cart, setCart] = React.useState([]);
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const [mobileMenu, setMobileMenu] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+  const [searchRes, setSearchRes] = React.useState(null);
+  const [expandedCats, setExpandedCats] = React.useState({});
+  const [sortBy, setSortBy] = React.useState("relevance");
+  const [products, setProducts] = React.useState(DEMO_PRODUCTS);
+  const [trayOk, setTrayOk] = React.useState(false);
+
+  React.useEffect(() => {
+    if (CONFIG.TRAY_API_URL && CONFIG.TRAY_ACCESS_TOKEN) {
+      TrayAPI.getProducts().then(d => { if(d && d.Products){ setProducts(d.Products.map(p=>p.Product)); setTrayOk(true); }});
+    }
+  }, []);
+
+  const nav = (p, data) => { setPage(p); if(p==="category")setSelCat(data); if(p==="product")setSelProd(data); if(p==="search")setSearchRes(data); setMobileMenu(false); window.scrollTo({top:0,behavior:"smooth"}); };
+
+  const addToCart = (product) => {
+    setCart(prev => { const ex = prev.find(i=>i.id===product.id); if(ex) return prev.map(i=>i.id===product.id?{...i,quantity:i.quantity+1}:i); return [...prev,{...product,quantity:1}]; });
+    setCartOpen(true);
+  };
+  const updateQty = (id,d) => setCart(prev => prev.map(i=>i.id===id?{...i,quantity:Math.max(0,i.quantity+d)}:i).filter(i=>i.quantity>0));
+  const removeItem = (id) => setCart(prev => prev.filter(i=>i.id!==id));
+  const cartTotal = cart.reduce((s,i) => { const p = i.promotional_price>0 && i.promotional_price<i.price ? i.promotional_price : i.price; return s+p*i.quantity; }, 0);
+  const cartCount = cart.reduce((s,i) => s+i.quantity, 0);
+
+  const doSearch = () => {
+    if(!search.trim()) return;
+    const q = search.toLowerCase();
+    const r = products.filter(p => p.name.toLowerCase().includes(q) || (p.brand && p.brand.toLowerCase().includes(q)));
+    nav("search", r);
+  };
+
+  const handleCheckout = () => {
+    if(trayOk){ window.open(TrayAPI.getCheckoutURL("session"),"_blank"); }
+    else { alert("Configure a integração com a Tray Commerce para finalizar compras.\n\nPreencha TRAY_API_URL, TRAY_ACCESS_TOKEN e TRAY_STORE_ID no código."); }
+  };
+
+  const getFiltered = (catId) => {
+    const cat = CATEGORIES.find(c=>c.id===catId);
+    if(!cat) return [];
+    const ids = [catId, ...cat.children.map(ch=>ch.id)];
+    let f = products.filter(p=>ids.includes(p.category_id));
+    if(sortBy==="price-asc") f.sort((a,b)=>a.price-b.price);
+    if(sortBy==="price-desc") f.sort((a,b)=>b.price-a.price);
+    if(sortBy==="name") f.sort((a,b)=>a.name.localeCompare(b.name));
+    return f;
+  };
+
+  const policyPages = ["termos-de-uso","politica-de-privacidade","politica-de-trocas","politica-de-entrega","politica-de-pagamento"];
+
+  return (
+    <div className="app-container">
+      {/* TOP BAR */}
+      <div className="top-bar"><div className="top-bar-inner">
+        <div style={{display:"flex",gap:20,alignItems:"center"}}>
+          <a href={CONFIG.WHATSAPP_URL} target="_blank"><Ico.Phone/> (27) 99825-5545</a>
+          <a href={CONFIG.INSTAGRAM_URL} target="_blank"><Ico.IG/> {CONFIG.INSTAGRAM}</a>
+        </div>
+        <div style={{display:"flex",gap:16,fontSize:11}}>
+          <span style={{cursor:"pointer",color:"#D1D1D1"}} onClick={()=>nav("politica-de-entrega")}>Rastrear Pedido</span>
+          <span style={{color:"rgba(255,255,255,.3)"}}>|</span>
+          <span style={{cursor:"pointer",color:"#D1D1D1"}} onClick={()=>nav("politica-de-pagamento")}>Central de Ajuda</span>
+        </div>
+      </div></div>
+
+      {/* HEADER */}
+      <header className="main-header"><div className="header-inner">
+        <button className="menu-toggle" onClick={()=>setMobileMenu(true)}><Ico.Menu/></button>
+        <div className="logo-area" onClick={()=>nav("home")}><div><div className="logo-text"><span>VAL</span>FRE</div><div className="logo-sub">Ferramentas</div></div></div>
+        <div className="search-container">
+          <input className="search-input" placeholder="O que você está procurando?" value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doSearch()}/>
+          <button className="search-btn" onClick={doSearch}><Ico.Search/></button>
+        </div>
+        <div className="header-actions">
+          <button className="header-action-btn"><Ico.User/><span className="label-text">Conta</span></button>
+          <button className="header-action-btn" onClick={()=>setCartOpen(true)}><Ico.Cart/><span className="label-text">Carrinho</span>{cartCount>0&&<div className="cart-badge">{cartCount}</div>}</button>
+        </div>
+      </div></header>
+
+      {/* CAT NAV */}
+      <nav className="category-nav"><div className="category-nav-inner">
+        <button className={"cat-nav-item"+(page==="home"?" active":"")} onClick={()=>nav("home")}><Ico.Home/> Início</button>
+        {CATEGORIES.map(cat=><button key={cat.id} className={"cat-nav-item"+(selCat&&selCat.id===cat.id?" active":"")} onClick={()=>nav("category",cat)}>{cat.icon} {cat.name}</button>)}
+      </div></nav>
+
+      {/* CONTENT */}
+      <main className="main-content">
+
+        {/* HOME */}
+        {page==="home" && <>
+          <div className="hero-banner">
+            <div className="hero-tag">Novidades</div>
+            <h1 className="hero-title">As Melhores Ferramentas para Seu Projeto</h1>
+            <p className="hero-subtitle">Ferramentas profissionais das melhores marcas com preços imbatíveis. Entrega para todo o Brasil.</p>
+            <button className="hero-btn" onClick={()=>nav("category",CATEGORIES[0])}>Ver Produtos <Ico.ChevRight/></button>
+          </div>
+          <div className="benefits-bar">
+            <div className="benefit-item"><div className="benefit-icon"><Ico.Truck/></div><div className="benefit-text"><h4>Entrega p/ Todo Brasil</h4><p>Frete calculado no checkout</p></div></div>
+            <div className="benefit-item"><div className="benefit-icon"><Ico.Shield/></div><div className="benefit-text"><h4>Compra Segura</h4><p>Site 100% protegido</p></div></div>
+            <div className="benefit-item"><div className="benefit-icon"><Ico.Card/></div><div className="benefit-text"><h4>Até 12x Sem Juros</h4><p>No cartão de crédito</p></div></div>
+            <div className="benefit-item"><div className="benefit-icon"><Ico.WA/></div><div className="benefit-text"><h4>Atendimento WhatsApp</h4><p>(27) 99825-5545</p></div></div>
+          </div>
+          <div className="section-header"><h2 className="section-title">Categorias</h2></div>
+          <div className="category-grid">
+            {CATEGORIES.filter(c=>c.id!==33).slice(0,10).map(cat=><div key={cat.id} className="category-card" onClick={()=>nav("category",cat)}><div className="category-icon">{cat.icon}</div><div className="category-label">{cat.name}</div></div>)}
+          </div>
+          <div className="section-header"><h2 className="section-title">Produtos em Destaque</h2><span className="section-link" onClick={()=>nav("category",CATEGORIES[1])}>Ver todos <Ico.ChevRight/></span></div>
+          <div className="product-grid">
+            {products.slice(0,8).map(p=><ProductCard key={p.id} product={p} onClick={p=>nav("product",p)} onAddToCart={addToCart}/>)}
+          </div>
+          <div className="section-header"><h2 className="section-title">Ofertas e Promoções</h2></div>
+          <div className="product-grid">
+            {products.filter(p=>p.promotional_price>0&&p.promotional_price<p.price).slice(0,4).map(p=><ProductCard key={p.id} product={p} onClick={p=>nav("product",p)} onAddToCart={addToCart}/>)}
+          </div>
+        </>}
+
+        {/* CATEGORY */}
+        {page==="category" && selCat && <>
+          <button className="back-btn" onClick={()=>nav("home")}><Ico.ArrowL/> Voltar</button>
+          <div className="section-header"><h2 className="section-title">{selCat.icon} {selCat.name}</h2></div>
+          <div className="category-page-layout">
+            <aside className="filter-sidebar">
+              <div className="filter-title">Filtros</div>
+              {selCat.children.length>0 && <div className="filter-group"><h4>Subcategorias</h4>{selCat.children.map(ch=><label key={ch.id} className="filter-option"><input type="checkbox"/> {ch.name}</label>)}</div>}
+              <div className="filter-group"><h4>Ordenar</h4><select className="sort-select" value={sortBy} onChange={e=>setSortBy(e.target.value)}><option value="relevance">Relevância</option><option value="price-asc">Menor Preço</option><option value="price-desc">Maior Preço</option><option value="name">Nome A-Z</option></select></div>
+              <div className="filter-group"><h4>Marca</h4>{["DeWalt","Bosch","Makita","Tramontina","Stanley"].map(b=><label key={b} className="filter-option"><input type="checkbox"/> {b}</label>)}</div>
+            </aside>
+            <div>
+              {getFiltered(selCat.id).length > 0
+                ? <div className="product-grid" style={{gridTemplateColumns:"repeat(3,1fr)"}}>{getFiltered(selCat.id).map(p=><ProductCard key={p.id} product={p} onClick={p=>nav("product",p)} onAddToCart={addToCart}/>)}</div>
+                : <div style={{textAlign:"center",padding:60,color:"#888"}}><p style={{fontSize:48,marginBottom:16}}>🔍</p><p style={{fontSize:16,fontWeight:500}}>Nenhum produto nesta categoria.</p><p style={{fontSize:14,marginTop:8}}>{trayOk?"Tente outra categoria.":"Configure a API da Tray para carregar seus produtos."}</p></div>
+              }
+            </div>
+          </div>
+        </>}
+
+        {/* PRODUCT */}
+        {page==="product" && selProd && (()=>{
+          const p = selProd;
+          const hasP = p.promotional_price>0 && p.promotional_price<p.price;
+          const dp = hasP ? p.promotional_price : p.price;
+          const pix = dp * 0.95;
+          const inst = Math.min(12, Math.max(1, Math.floor(dp/20)));
+          const parentCat = CATEGORIES.find(c=>c.children.some(ch=>ch.id===p.category_id)||c.id===p.category_id);
+          return <>
+            <button className="back-btn" onClick={()=>selCat?nav("category",selCat):nav("home")}><Ico.ArrowL/> Voltar</button>
+            <div className="product-detail">
+              <div className="pd-image-area"><img src={getProductImage(p)} alt={p.name}/></div>
+              <div className="pd-info">
+                <div className="pd-breadcrumb"><span onClick={()=>nav("home")}>Início</span> <Ico.ChevRight/> {parentCat&&<><span onClick={()=>nav("category",parentCat)}>{parentCat.name}</span> <Ico.ChevRight/></>} <span>{p.name}</span></div>
+                <div className="pd-brand">{p.brand}</div>
+                <h1 className="pd-name">{p.name}</h1>
+                <div className="pd-sku">REF: VAL-{String(p.id).padStart(6,"0")}</div>
+                <div className="pd-stars">{[1,2,3,4,5].map(i=><Ico.Star key={i} f={i<=4}/>)}<span style={{fontSize:12,color:"#888",marginLeft:4}}>(4.0)</span></div>
+                <div className="pd-price-area">
+                  {hasP && <div className="pd-old-price">de {formatPrice(p.price)}</div>}
+                  <div className="pd-price">{formatPrice(dp)}</div>
+                  {inst>1 && <div className="pd-installments">até <strong>{inst}x de {formatPrice(dp/inst)}</strong> sem juros</div>}
+                  <div className="pd-pix">{formatPrice(pix)} no PIX (5% de desconto)</div>
+                </div>
+                <div className="pd-stock"><span className="dot"/> Em estoque — {p.stock||"10+"} unidades</div>
+                <div className="pd-buttons">
+                  <button className="pd-add-cart" onClick={()=>addToCart(p)}>Adicionar ao Carrinho</button>
+                  <button className="pd-buy-now" onClick={()=>{addToCart(p);handleCheckout();}}>Comprar Agora</button>
+                </div>
+                <div className="pd-desc"><h3>Descrição</h3><p>{p.description||"Produto de alta qualidade disponível na Ferramentas Valfre."}</p></div>
+              </div>
+            </div>
+            <div className="section-header" style={{marginTop:24}}><h2 className="section-title">Produtos Relacionados</h2></div>
+            <div className="product-grid">{products.filter(x=>x.id!==p.id).slice(0,4).map(x=><ProductCard key={x.id} product={x} onClick={x=>nav("product",x)} onAddToCart={addToCart}/>)}</div>
+          </>;
+        })()}
+
+        {/* SEARCH */}
+        {page==="search" && <>
+          <button className="back-btn" onClick={()=>nav("home")}><Ico.ArrowL/> Voltar</button>
+          <div className="section-header"><h2 className="section-title">Resultados para "{search}" ({searchRes?.length||0})</h2></div>
+          {searchRes&&searchRes.length>0 ? <div className="product-grid">{searchRes.map(p=><ProductCard key={p.id} product={p} onClick={p=>nav("product",p)} onAddToCart={addToCart}/>)}</div>
+          : <div style={{textAlign:"center",padding:60,color:"#888"}}><p style={{fontSize:48}}>🔍</p><p style={{fontSize:16,fontWeight:500,marginTop:16}}>Nenhum produto encontrado.</p></div>}
+        </>}
+
+        {/* POLICIES */}
+        {policyPages.includes(page) && <PolicyPage type={page} navigate={nav}/>}
+      </main>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <h3><span>VAL</span>FRE</h3>
+            <p>Ferramentas Valfre — Sua loja de ferramentas e equipamentos profissionais.</p>
+            <p style={{fontSize:12}}>CNPJ: {CONFIG.CNPJ}</p>
+            <div className="footer-social" style={{marginTop:12}}>
+              <a href={CONFIG.WHATSAPP_URL} target="_blank"><Ico.WA/></a>
+              <a href={CONFIG.INSTAGRAM_URL} target="_blank"><Ico.IG/></a>
+            </div>
+          </div>
+          <div className="footer-col"><h4>Institucional</h4><ul>
+            <li><a onClick={()=>nav("termos-de-uso")}>Termos de Uso</a></li>
+            <li><a onClick={()=>nav("politica-de-privacidade")}>Política de Privacidade</a></li>
+            <li><a onClick={()=>nav("politica-de-trocas")}>Trocas e Devoluções</a></li>
+            <li><a onClick={()=>nav("politica-de-entrega")}>Política de Entrega</a></li>
+            <li><a onClick={()=>nav("politica-de-pagamento")}>Formas de Pagamento</a></li>
+          </ul></div>
+          <div className="footer-col"><h4>Categorias</h4><ul>
+            {CATEGORIES.slice(0,6).map(c=><li key={c.id}><a onClick={()=>nav("category",c)}>{c.name}</a></li>)}
+          </ul></div>
+          <div className="footer-col"><h4>Atendimento</h4><ul>
+            <li><a href={CONFIG.WHATSAPP_URL} target="_blank">WhatsApp: (27) 99825-5545</a></li>
+            <li><a href={CONFIG.INSTAGRAM_URL} target="_blank">Instagram: {CONFIG.INSTAGRAM}</a></li>
+            <li><a>Seg à Sex: 8h às 18h</a></li>
+            <li><a>Sáb: 8h às 12h</a></li>
+          </ul></div>
+        </div>
+        <div className="footer-bottom"><p>© 2026 Ferramentas Valfre — CNPJ: {CONFIG.CNPJ} — Todos os direitos reservados.</p></div>
+      </footer>
+
+      {/* CART */}
+      <div className={"cart-overlay"+(cartOpen?" open":"")} onClick={()=>setCartOpen(false)}/>
+      <div className={"cart-sidebar"+(cartOpen?" open":"")}>
+        <div className="cart-header"><h2>Carrinho ({cartCount})</h2><button className="cart-close" onClick={()=>setCartOpen(false)}>✕</button></div>
+        {cart.length===0
+          ? <div className="cart-empty"><span>🛒</span><p>Seu carrinho está vazio</p><button className="product-add-btn" style={{width:"auto",padding:"10px 24px"}} onClick={()=>{setCartOpen(false);nav("home")}}>Continuar Comprando</button></div>
+          : <><div className="cart-items">{cart.map(item=>{
+              const ip = item.promotional_price>0&&item.promotional_price<item.price?item.promotional_price:item.price;
+              return <div key={item.id} className="cart-item">
+                <div className="cart-item-img"><img src={getProductImage(item)} alt={item.name}/></div>
+                <div className="cart-item-info">
+                  <div className="cart-item-name">{item.name}</div>
+                  <div className="cart-item-price">{formatPrice(ip*item.quantity)}</div>
+                  <div className="cart-item-actions">
+                    <div className="cart-item-qty"><button onClick={()=>updateQty(item.id,-1)}>−</button><span>{item.quantity}</span><button onClick={()=>updateQty(item.id,1)}>+</button></div>
+                    <button className="cart-item-remove" onClick={()=>removeItem(item.id)}>🗑</button>
+                  </div>
+                </div>
+              </div>;
+            })}</div>
+            <div className="cart-footer">
+              <div className="cart-total"><span className="cart-total-label">Total:</span><span className="cart-total-value">{formatPrice(cartTotal)}</span></div>
+              <button className="cart-checkout-btn" onClick={handleCheckout}>Finalizar Compra</button>
+              <button className="cart-continue" onClick={()=>setCartOpen(false)}>Continuar Comprando</button>
+            </div>
+          </>
+        }
+      </div>
+
+      {/* MOBILE MENU */}
+      <div className={"mobile-menu-overlay"+(mobileMenu?" open":"")} onClick={()=>setMobileMenu(false)}/>
+      <div className={"mobile-menu"+(mobileMenu?" open":"")}>
+        <div className="mobile-menu-header"><h3>Menu</h3><button className="mobile-menu-close" onClick={()=>setMobileMenu(false)}>✕</button></div>
+        <div style={{padding:12,borderBottom:"1px solid #E8E8E8"}}><div style={{position:"relative"}}><input className="search-input" style={{background:"#F5F5F5",color:"#1A1A1A",width:"100%"}} placeholder="Buscar..." value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"){doSearch();setMobileMenu(false)}}}/><button className="search-btn" onClick={()=>{doSearch();setMobileMenu(false)}}><Ico.Search/></button></div></div>
+        <div>
+          <button className="mobile-cat-item" onClick={()=>nav("home")}>🏠 Início</button>
+          {CATEGORIES.map(cat=><div key={cat.id}>
+            <button className="mobile-cat-item" onClick={()=>{if(cat.children.length)setExpandedCats(p=>({...p,[cat.id]:!p[cat.id]}));else nav("category",cat)}}>
+              <span>{cat.icon} {cat.name}</span>{cat.children.length>0&&(expandedCats[cat.id]?<Ico.ChevDown/>:<Ico.ChevRight/>)}
+            </button>
+            {expandedCats[cat.id]&&cat.children.length>0&&<div className="mobile-cat-children">
+              <button className="mobile-cat-child" onClick={()=>nav("category",cat)}>Ver Todos</button>
+              {cat.children.map(ch=><button key={ch.id} className="mobile-cat-child" onClick={()=>nav("category",cat)}>{ch.name}</button>)}
+            </div>}
+          </div>)}
+        </div>
+        <div className="mobile-menu-links">
+          <button className="mobile-link" onClick={()=>nav("termos-de-uso")}>Termos de Uso</button>
+          <button className="mobile-link" onClick={()=>nav("politica-de-privacidade")}>Política de Privacidade</button>
+          <button className="mobile-link" onClick={()=>nav("politica-de-trocas")}>Trocas e Devoluções</button>
+          <button className="mobile-link" onClick={()=>nav("politica-de-entrega")}>Política de Entrega</button>
+          <button className="mobile-link" onClick={()=>nav("politica-de-pagamento")}>Formas de Pagamento</button>
+        </div>
+        <div style={{padding:16,borderTop:"1px solid #E8E8E8"}}><a href={CONFIG.WHATSAPP_URL} target="_blank" style={{display:"flex",alignItems:"center",gap:8,color:"#25D366",textDecoration:"none",fontWeight:600,fontSize:14}}><Ico.WA/> (27) 99825-5545</a></div>
+      </div>
+
+      {/* WHATSAPP FLOAT */}
+      <a href={CONFIG.WHATSAPP_URL} target="_blank" className="whatsapp-float" title="WhatsApp"><Ico.WA/></a>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
