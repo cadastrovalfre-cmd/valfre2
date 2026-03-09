@@ -247,8 +247,8 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
         <button
           className="h-btn"
           onClick={()=>{
-            if(s.c===-1) window.open(CFG.WA_URL,"_blank");
-            else nav("category",CATS[s.c]);
+            if(s.c===-1) window.open(CFG.WA_URL,"_blank")
+            else nav("category",CATS[s.c])
           }}
         >
           {s.b} <I.R/>
@@ -257,6 +257,32 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
       </div>
     ))}
   </div>
+
+  <button
+    className="car-arrow l"
+    onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}
+  >
+    ❮
+  </button>
+
+  <button
+    className="car-arrow r"
+    onClick={()=>sCi(p=>(p+1)%homeSlides.length)}
+  >
+    ❯
+  </button>
+
+  <div className="car-dots">
+    {homeSlides.map((_,i)=>(
+      <button
+        key={i}
+        className={"car-dot"+(ci===i?" active":"")}
+        onClick={()=>sCi(i)}
+      />
+    ))}
+  </div>
+
+</div>
 
   <button
     className="car-arrow l"
