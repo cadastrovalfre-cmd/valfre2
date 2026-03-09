@@ -1,16 +1,11 @@
 export default async function handler(req, res) {
-
   try {
 
     const page = req.query.page || 1;
-    const limit = 50;
 
-    const url =
-      "https://1225878.commercesuite.com.br/web_api/products" +
-      "?limit=" + limit +
-      "&page=" + page;
-
-    const response = await fetch(url);
+    const response = await fetch(
+      "https://1225878.commercesuite.com.br/web_api/products?limit=50&page=" + page
+    );
 
     const data = await response.json();
 
@@ -50,10 +45,11 @@ export default async function handler(req, res) {
 
         ean: p.ean || "",
 
+        slug: p.slug || "",
+
         image:
           p.ProductImage?.[0]?.https ||
           p.ProductImage?.[0]?.http ||
-          p.image ||
           null
 
       };
@@ -64,10 +60,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
 
-    console.error("API ERROR:", error);
+    console.error("Tray API ERROR:", error);
 
     res.status(500).json([]);
 
   }
-
 }
