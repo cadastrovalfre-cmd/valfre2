@@ -209,30 +209,57 @@ function App(){
 
    <main className="main-c">
     {/* HOME */}
-    {pg==="home"&&(
-     <>
-      {/* CAROUSEL */}
-      <div className="car-wrap">
-       <div className="car-track" style={{transform:`translateX(-${ci*100}%)`}}>
-        {homeSlides.map((s,i)=>(
-         <div key={i} className="car-slide" style={{background:s.bg}}>
-          <div className="h-tag">{s.tag}</div>
-          <h1 className="h-title">{s.t}</h1>
-          <p className="h-sub">{s.s}</p>
-          <button className="h-btn" onClick={()=>{if(s.c===-1)window.open(CFG.WA_URL,"_blank");else nav("category",CATS[s.c])}}>
-           {s.b} <I.R/>
-          </button>
-         </div>
-        ))}
-       </div>
-       <button className="car-arrow l" onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}>❮</button>
-       <button className="car-arrow r" onClick={()=>sCi(p=>(p+1)%homeSlides.length)}>❯</button>
-       <div className="car-dots">
-        {homeSlides.map((_,i)=>(
-         <button key={i} className={"car-dot"+(ci===i?" active":"")} onClick={()=>sCi(i)}/>
-        ))}
-       </div>
+   <div className="car-wrap">
+  <div
+    className="car-track"
+    style={{ transform: `translateX(-${ci * 100}%)` }}
+  >
+    {homeSlides.map((s, i) => (
+      <div key={i} className="car-slide" style={{ background: s.bg }}>
+        <div className="h-tag">{s.tag}</div>
+        <h1 className="h-title">{s.t}</h1>
+        <p className="h-sub">{s.s}</p>
+
+        <button
+          className="h-btn"
+          onClick={() => {
+            if (s.c === -1) {
+              window.open(CFG.WA_URL, "_blank");
+            } else {
+              nav("category", CATS[s.c]);
+            }
+          }}
+        >
+          {s.b} <I.R />
+        </button>
       </div>
+    ))}
+  </div>
+
+  <button
+    className="car-arrow l"
+    onClick={() => sCi((p) => (p - 1 + homeSlides.length) % homeSlides.length)}
+  >
+    ❮
+  </button>
+
+  <button
+    className="car-arrow r"
+    onClick={() => sCi((p) => (p + 1) % homeSlides.length)}
+  >
+    ❯
+  </button>
+
+  <div className="car-dots">
+    {homeSlides.map((_, i) => (
+      <button
+        key={i}
+        className={"car-dot" + (ci === i ? " active" : "")}
+        onClick={() => sCi(i)}
+      />
+    ))}
+  </div>
+</div>
 
       {/* OFERTAS */}
       {promos.length>0&&(
