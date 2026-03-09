@@ -26,14 +26,16 @@ const CATS=[{id:11,name:"Ferramentas Manuais",icon:"🔧",ch:[{id:13,name:"Marte
 const DEMO=[{id:1,name:"Furadeira de Impacto 750W",price:289.9,promotional_price:249.9,brand:"DeWalt",category_id:61,stock:15,description:"Furadeira profissional 750W.",description_small:"Furadeira 750W",model:"DWD024",weight:"3.2kg",warranty:"1 ano"},{id:2,name:"Jogo Chaves Allen 9 Peças",price:45.9,promotional_price:0,brand:"Tramontina",category_id:41,stock:30,description:"Aço cromo vanádio.",description_small:"Chaves Allen 9pcs",model:"44400",weight:"0.3kg",warranty:"Vitalícia"},{id:3,name:"Esmerilhadeira Angular 850W",price:329.9,promotional_price:299.9,brand:"Bosch",category_id:65,stock:8,description:"Anti-vibração 4½\".",description_small:"Esmerilhadeira Bosch",model:"GWS850",weight:"2.1kg",warranty:"1 ano"},{id:4,name:"Martelo Unha 27mm",price:59.9,promotional_price:0,brand:"Stanley",category_id:13,stock:25,description:"Cabo fibra de vidro.",description_small:"Martelo Stanley",model:"51-271",weight:"0.7kg",warranty:"Vitalícia"},{id:5,name:"Serra Circular 1400W",price:499.9,promotional_price:459.9,brand:"Makita",category_id:67,stock:5,description:"Profissional 7¼\".",description_small:"Serra Makita",model:"5007N",weight:"5.1kg",warranty:"1 ano"},{id:6,name:"Parafusadeira Bateria 12V",price:399.9,promotional_price:349.9,brand:"DeWalt",category_id:63,stock:12,description:"2 baterias incluídas.",description_small:"Parafusadeira 12V",model:"DCD700",weight:"1.4kg",warranty:"2 anos"},{id:7,name:"Alicate Universal 8\"",price:39.9,promotional_price:0,brand:"Tramontina",category_id:39,stock:40,description:"Isolado 1000V.",description_small:"Alicate 8\"",model:"44050",weight:"0.35kg",warranty:"Vitalícia"},{id:8,name:"Disco Corte 4½\" Pack 10",price:29.9,promotional_price:24.9,brand:"Norton",category_id:75,stock:50,description:"Metais ferrosos.",description_small:"Discos Norton",model:"BNA12",weight:"0.5kg",warranty:"N/A"},{id:9,name:"Nível Bolha 30cm",price:25.9,promotional_price:0,brand:"Vonder",category_id:139,stock:20,description:"Base magnética.",description_small:"Nível Vonder",model:"363",weight:"0.2kg",warranty:"6 meses"},{id:10,name:"Lixadeira Orbital 200W",price:199.9,promotional_price:179.9,brand:"Black+Decker",category_id:145,stock:10,description:"Coleta de pó.",description_small:"Lixadeira B&D",model:"QS800",weight:"1.6kg",warranty:"2 anos"},{id:11,name:"Ventilador Mesa 40cm",price:159.9,promotional_price:139.9,brand:"Ventisol",category_id:113,stock:18,description:"3 velocidades.",description_small:"Ventilador 40cm",model:"V40D",weight:"3.5kg",warranty:"1 ano"},{id:12,name:"Kit Pedreiro 5 Peças",price:89.9,promotional_price:0,brand:"Vonder",category_id:87,stock:15,description:"Kit completo.",description_small:"Kit pedreiro",model:"KP5",weight:"2kg",warranty:"3 meses"},{id:13,name:"Jogo Brocas HSS 13pcs",price:69.9,promotional_price:59.9,brand:"Bosch",category_id:77,stock:22,description:"1,5 a 6,5mm.",description_small:"Brocas HSS",model:"HSS-G",weight:"0.2kg",warranty:"N/A"},{id:14,name:"Extensão Elétrica 10m",price:49.9,promotional_price:0,brand:"Daneva",category_id:111,stock:30,description:"3 tomadas.",description_small:"Extensão 10m",model:"DN1610",weight:"1kg",warranty:"3 meses"},{id:15,name:"WD-40 Spray 300ml",price:34.9,promotional_price:29.9,brand:"WD-40",category_id:129,stock:35,description:"Multiuso.",description_small:"WD-40",model:"300ml",weight:"0.4kg",warranty:"N/A"},{id:16,name:"Suporte TV 32-55\"",price:129.9,promotional_price:109.9,brand:"ELG",category_id:123,stock:14,description:"Articulado.",description_small:"Suporte ELG",model:"A02V4N",weight:"2.8kg",warranty:"5 anos"}];
 
 const TrayAPI={
+
  async get(p={}){
   if(!CFG.TRAY_URL) return null;
 
   try{
+
    const base = CFG.TRAY_URL.replace(/\/+$/,"");
 
-const url = base + "/products?limit=50&page=" + (p.limit || 50) + "&page=" + (p.page || 1);
-   
+   const url = base + "/products?limit=" + (p.limit || 50) + "&page=" + (p.page || 1);
+
    const r = await fetch(url);
 
    return await r.json();
@@ -45,47 +47,41 @@ const url = base + "/products?limit=50&page=" + (p.limit || 50) + "&page=" + (p.
  },
 
  parse(p){
+
   let img="";
 
-try{
+  try{
 
-parse(p){
+   if(p.ProductImage && Array.isArray(p.ProductImage) && p.ProductImage.length>0){
+    img = p.ProductImage[0].https || p.ProductImage[0].http || "";
+   }
 
- let img="";
+   if(!img && p.images && p.images.length>0){
+    img = p.images[0];
+   }
 
- try{
-
-  if(p.ProductImage && p.ProductImage.length){
-   img = p.ProductImage[0].https || p.ProductImage[0].http || "";
+  }catch(e){
+   console.log("erro imagem",e);
   }
 
-  if(!img && p.images && p.images.length){
-   img = p.images[0];
-  }
+  return{
+   id:+p.id,
+   name:p.name||"",
+   price:+p.price||0,
+   promotional_price:+p.promotional_price||0,
+   brand:p.brand||"",
+   category_id:+p.category_id||0,
+   stock:+p.stock||0,
+   description:p.description||"",
+   description_small:p.description_small||"",
+   image:img,
+   ean:p.ean||"",
+   model:p.model||"",
+   weight:p.weight ? p.weight+"g" : "",
+   warranty:p.warranty||"",
+   all_categories:p.all_categories||[]
+  };
 
- }catch(e){
-  console.log("erro imagem",e)
- }
-
- return {
-  id:+p.id,
-  name:p.name||"",
-  price:+p.price||0,
-  promotional_price:+p.promotional_price||0,
-  brand:p.brand||"",
-  category_id:+p.category_id||0,
-  stock:+p.stock||0,
-  description:p.description||"",
-  description_small:p.description_small||"",
-  image:img,
-  ean:p.ean||"",
-  model:p.model||"",
-  weight:p.weight ? p.weight+"g" : "",
-  warranty:p.warranty||"",
-  all_categories:p.all_categories||[]
- };
-
-}
  },
 
  ckURL(s){
@@ -93,14 +89,16 @@ parse(p){
    CFG.TRAY_STORE_URL ||
    CFG.TRAY_URL.replace(/\/web_api\/?$/,"");
 
-  return (
+  return(
    storeUrl +
    "/loja/carrinho.php?loja=" +
    CFG.TRAY_SID +
    "&transID=" + s
   );
  }
+
 };
+ 
 const fmt=p=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(p);
 const gImg = (p) => {
 
