@@ -32,7 +32,7 @@ const TrayAPI={
   try{
    const base = CFG.TRAY_URL.replace(/\/+$/,"");
 
-const url = "/api/products?page=" + (p.page || 1);
+const url = base + "/products?limit=50&page=" + (p.limit || 50) + "&page=" + (p.page || 1);
    
    const r = await fetch(url);
 
@@ -49,35 +49,43 @@ const url = "/api/products?page=" + (p.page || 1);
 
 try{
 
-if(p.ProductImage && Array.isArray(p.ProductImage) && p.ProductImage.length > 0){
-img = p.ProductImage[0].https || p.ProductImage[0].http || "";
-}
+parse(p){
 
-if(!img && p.images && p.images.length > 0){
-img = p.images[0];
-}
+ let img="";
 
-}catch(e){
-console.log("erro imagem",e)
-}
+ try{
 
-  return {
-   id:+p.id,
-   name:p.name||"",
-   price:+p.price||0,
-   promotional_price:+p.promotional_price||0,
-   brand:p.brand||"",
-   category_id:+p.category_id||0,
-   stock:+p.stock||0,
-   description:p.description||"",
-   description_small:p.description_small||"",
-   image:img,
-   ean:p.ean||"",
-   model:p.model||"",
-   weight:p.weight ? p.weight+"g" : "",
-   warranty:p.warranty||"",
-   all_categories:p.all_categories||[]
-  };
+  if(p.ProductImage && p.ProductImage.length){
+   img = p.ProductImage[0].https || p.ProductImage[0].http || "";
+  }
+
+  if(!img && p.images && p.images.length){
+   img = p.images[0];
+  }
+
+ }catch(e){
+  console.log("erro imagem",e)
+ }
+
+ return {
+  id:+p.id,
+  name:p.name||"",
+  price:+p.price||0,
+  promotional_price:+p.promotional_price||0,
+  brand:p.brand||"",
+  category_id:+p.category_id||0,
+  stock:+p.stock||0,
+  description:p.description||"",
+  description_small:p.description_small||"",
+  image:img,
+  ean:p.ean||"",
+  model:p.model||"",
+  weight:p.weight ? p.weight+"g" : "",
+  warranty:p.warranty||"",
+  all_categories:p.all_categories||[]
+ };
+
+}
  },
 
  ckURL(s){
@@ -139,7 +147,7 @@ TrayAPI.get({limit:50}).then(function(d){
 
 if(!d) return;
 
-var items = d.Products || d.products || [];
+var items = Array.isArray(d) ? d : (d.Products || d.products || []);
 
 if(items.length>0){
 
