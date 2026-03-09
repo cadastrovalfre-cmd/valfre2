@@ -384,7 +384,6 @@ Ver todos →
 </div>
 </div>
 
-</>
 )}
 {/* CATEGORY */}
 {pg==="category"&&sC&&<><button className="back-btn" onClick={()=>nav("home")}><I.AL/> Voltar</button><div className="sec-hdr"><h2 className="sec-title">{sC.icon} {sC.name}</h2></div><div className="cp-layout"><aside className="f-side"><div className="f-title">Filtros</div>{sC.ch.length>0&&<div className="f-grp"><h4>Subcategorias</h4>{sC.ch.map(ch=><label key={ch.id} className="f-opt"><input type="checkbox"/> {ch.name}</label>)}</div>}<div className="f-grp"><h4>Ordenar</h4><select className="f-sel" value={sb} onChange={e=>sSB(e.target.value)}><option value="relevance">Relevância</option><option value="price-asc">Menor Preço</option><option value="price-desc">Maior Preço</option><option value="name">Nome A-Z</option></select></div></aside><div>{gF(sC.id).length>0?<div className="p-grid" style={{gridTemplateColumns:"repeat(3,1fr)"}}>{gF(sC.id).map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>:<div style={{textAlign:"center",padding:48,color:"#888"}}><p style={{fontSize:40}}>🔍</p><p style={{marginTop:12}}>Nenhum produto.</p></div>}</div></div></>}
