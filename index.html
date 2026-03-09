@@ -145,6 +145,7 @@ return<div className="app-container">
 <div className="nl-sec"><h2>📧 Receba Ofertas Exclusivas</h2><p>Cadastre-se na newsletter e ganhe cupons!</p><div className="nl-form"><input className="nl-inp" placeholder="Seu melhor e-mail" type="email"/><button className="nl-btn">Cadastrar</button></div></div>
 <div className="sec-hdr"><h2 className="sec-title">Mais Produtos</h2></div><div className="p-grid">{prods.slice(8,16).map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>
 <div className="app-dl"><div><h3>📱 Baixe nosso aplicativo</h3><p>Em breve! Compre com mais praticidade.</p><div className="app-badges"><a className="app-badge" href="#" style={{opacity:.6}}>🍎 <span>Em breve<br/>App Store</span></a><a className="app-badge" href="#" style={{opacity:.6}}>▶️ <span>Em breve<br/>Google Play</span></a></div></div></div>
+</div>
 </>
 )}
 {/* CATEGORY */}
