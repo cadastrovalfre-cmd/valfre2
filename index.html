@@ -260,7 +260,7 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
 
   <button
     className="car-arrow l"
-    onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}
+    <onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}
   >
     ❮
   </button>
@@ -285,32 +285,9 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
 </div>
 
   <button
-    className="car-arrow l"
-    onClick={()=>sCi((p)=>(p-1+homeSlides.length)%homeSlides.length)}
-  >
-    ❮
-  </button>
-
-  <button
-    className="car-arrow r"
-    onClick={()=>sCi((p)=>(p+1)%homeSlides.length)}
-  >
-    ❯
-  </button>
-
-  <div className="car-dots">
-    {homeSlides.map((_,i)=>(
-      <button
-        key={i}
-        className={"car-dot"+(ci===i?" active":"")}
-        onClick={()=>sCi(i)}
-      />
-    ))}
-  </div>
-
-</div>
-
-<div className="car-slide" style={{background:"linear-gradient(135deg,#E87A1D,#D06A10)"}}>
+    
+   
+   style={{background:"linear-gradient(135deg,#E87A1D,#D06A10)"}}>
 <div className="h-tag">Ofertas</div>
 <h1 className="h-title">Até 40% OFF em Ferramentas Elétricas</h1>
 <p className="h-sub">Furadeiras, parafusadeiras e mais com desconto!</p>
