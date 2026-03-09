@@ -183,7 +183,7 @@ function PC({p,onClick,onAdd}){
     <div className="p-price">{fmt(dp)}</div>
     <div className="p-pix">à vista no Pix ou Boleto</div>
     {inst>1&&<div className="p-inst">ou {inst}x de {fmt(dp/inst)} sem juros</div>}
-    <button className="p-btn" onClick={e=>{e.stopPropagation();onAdd(p)}>Comprar</button>
+    <button className="p-btn" onClick={e=>{e.stopPropagation();onAdd(p)}}>Comprar</button>
    </div>
   </div>
  );
