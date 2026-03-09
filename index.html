@@ -132,8 +132,45 @@ const homeSlides=[
   return ()=>clearInterval(tr.current);
 },[pg,homeSlides.length]);
 const[pg,sPg]=React.useState("home");const[sC,sSC]=React.useState(null);const[sP,sSP]=React.useState(null);const[cart,sCart]=React.useState([]);const[cO,sCO]=React.useState(false);const[mm,sMM]=React.useState(false);const[sq,sSQ]=React.useState("");const[sr,sSR]=React.useState(null);const[ec,sEC]=React.useState({});const[sb,sSB]=React.useState("relevance");const[prods,sProds]=React.useState(DEMO);const[tOk,sTOk]=React.useState(false);const[alrt,sAlrt]=React.useState(()=>{try{return !window.localStorage.getItem("valfre_alert_seen")}catch(e){return true}});const[pdt,sPDT]=React.useState("desc");const oRef=React.useRef(null);
-React.useEffect(()=>{if(CFG.TRAY_URL&&CFG.TRAY_TOKEN){TrayAPI.get({limit:50}).then(function(d){if(!d)return;var items = d || [];if(items.length>0){var parsed=items.map(function(i){var prod=i.Product||i.product||i;return TrayAPI.parse(prod)});sProds(parsed);sTOk(true);console.log("Tray: "+parsed.length+" produtos carregados")}else{console.warn("Tray: resposta sem produtos",d)}}).catch(function(e){console.error("Tray: erro ao carregar",e)})}},[]);
-const nav=(p,d)=>{sPg(p);if(p==="category")sSC(d);if(p==="product"){sSP(d);sPDT("desc")}if(p==="search")sSR(d);sMM(false);window.scrollTo({top:0,behavior:"smooth"})};
+React.useEffect(()=>{
+if(CFG.TRAY_URL && CFG.TRAY_TOKEN){
+
+TrayAPI.get({limit:50}).then(function(d){
+
+if(!d) return;
+
+var items = d.Products || d.products || [];
+
+if(items.length>0){
+
+var parsed = items.map(function(i){
+
+var prod = i.Product || i.product || i;
+
+return TrayAPI.parse(prod);
+
+});
+
+sProds(parsed);
+sTOk(true);
+
+console.log("Tray:", parsed.length, "produtos carregados");
+
+}else{
+
+console.warn("Tray: resposta sem produtos", d);
+
+}
+
+}).catch(function(e){
+
+console.error("Tray: erro ao carregar", e);
+
+});
+
+}
+},[]);
+ const nav=(p,d)=>{sPg(p);if(p==="category")sSC(d);if(p==="product"){sSP(d);sPDT("desc")}if(p==="search")sSR(d);sMM(false);window.scrollTo({top:0,behavior:"smooth"})};
 const addC=p=>{sCart(prev=>{const ex=prev.find(i=>i.id===p.id);if(ex)return prev.map(i=>i.id===p.id?{...i,quantity:i.quantity+1}:i);return[...prev,{...p,quantity:1}]});sCO(true)};
 const uQ=(id,d)=>sCart(p=>p.map(i=>i.id===id?{...i,quantity:Math.max(0,i.quantity+d)}:i).filter(i=>i.quantity>0));
 const rI=id=>sCart(p=>p.filter(i=>i.id!==id));
