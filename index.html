@@ -176,7 +176,32 @@ console.error("Tray: erro ao carregar", e);
 
 }
 },[]);
- const nav=(p,d)=>{sPg(p);if(p==="category")sSC(d);if(p==="product"){sSP(d);sPDT("desc")}if(p==="search")sSR(d);sMM(false);window.scrollTo({top:0,behavior:"smooth"})};
+ const nav=(page,data)=>{
+
+  sPg(page);
+
+  if(page==="category"){
+    sSC(data || null);
+  }
+
+  if(page==="product"){
+    if(!data) return;
+    sSP(data);
+    sPDT("desc");
+  }
+
+  if(page==="search"){
+    sSR(data || []);
+  }
+
+  sMM(false);
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+};;
 const addC=p=>{sCart(prev=>{const ex=prev.find(i=>i.id===p.id);if(ex)return prev.map(i=>i.id===p.id?{...i,quantity:i.quantity+1}:i);return[...prev,{...p,quantity:1}]});sCO(true)};
 const uQ=(id,d)=>sCart(p=>p.map(i=>i.id===id?{...i,quantity:Math.max(0,i.quantity+d)}:i).filter(i=>i.quantity>0));
 const rI=id=>sCart(p=>p.filter(i=>i.id!==id));
