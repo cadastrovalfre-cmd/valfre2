@@ -234,53 +234,60 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
 <>
 <div className="car-wrap">
 
-  <div
-    className="car-track"
-    style={{transform:`translateX(-${ci*100}%)`}}
-  >
-    {homeSlides.map((s,i)=>(
-      <div key={i} className="car-slide" style={{background:s.bg}}>
-        <div className="h-tag">{s.tag}</div>
-        <h1 className="h-title">{s.t}</h1>
-        <p className="h-sub">{s.s}</p>
+<div
+className="car-track"
+style={{transform:`translateX(-${ci*100}%)`}}
+>
 
-        <button
-          className="h-btn"
-          onClick={()=>{
-            if(s.c===-1) window.open(CFG.WA_URL,"_blank")
-            else nav("category",CATS[s.c])
-          }}
-        >
-          {s.b} <I.R/>
-        </button>
+{homeSlides.map((s,i)=>(
 
-      </div>
-    ))}
-  </div>
+<div key={i} className="car-slide" style={{background:s.bg}}>
 
-  <button
-    className="car-arrow l"
-    <onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}
-  >
-    ❮
-  </button>
+<div className="h-tag">{s.tag}</div>
 
-  <button
-    className="car-arrow r"
-    onClick={()=>sCi(p=>(p+1)%homeSlides.length)}
-  >
-    ❯
-  </button>
+<h1 className="h-title">{s.t}</h1>
 
-  <div className="car-dots">
-    {homeSlides.map((_,i)=>(
-      <button
-        key={i}
-        className={"car-dot"+(ci===i?" active":"")}
-        onClick={()=>sCi(i)}
-      />
-    ))}
-  </div>
+<p className="h-sub">{s.s}</p>
+
+<button
+className="h-btn"
+onClick={()=>{
+if(s.c===-1) window.open(CFG.WA_URL,"_blank")
+else nav("category",CATS[s.c])
+}}
+>
+{s.b} <I.R/>
+</button>
+
+</div>
+
+))}
+
+</div>
+
+<button
+className="car-arrow l"
+onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}
+>
+❮
+</button>
+
+<button
+className="car-arrow r"
+onClick={()=>sCi(p=>(p+1)%homeSlides.length)}
+>
+❯
+</button>
+
+<div className="car-dots">
+{homeSlides.map((_,i)=>(
+<button
+key={i}
+className={"car-dot"+(ci===i?" active":"")}
+onClick={()=>sCi(i)}
+/>
+))}
+</div>
 
 </div>
 
