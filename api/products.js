@@ -21,7 +21,11 @@ export default async function handler(req, res) {
       model: p.Product.model || "",
       weight: p.Product.weight || "",
       warranty: p.Product.warranty || "",
-      image: p.Product.ProductImage?.[0]?.https || null
+      image:
+  p.Product.ProductImage?.[0]?.https ||
+  p.Product.ProductImage?.[0]?.http ||
+  p.Product.image ||
+  null
   }));
 
   res.status(200).json(products);
