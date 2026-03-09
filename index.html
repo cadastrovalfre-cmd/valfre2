@@ -131,7 +131,31 @@ return<div className="app-container">
 <header className="main-header"><div className="header-inner">
 <button className="menu-toggle" onClick={()=>sMM(true)}><I.M/></button>
 <div className="logo-area" onClick={()=>nav("home")}><img src="/logo.png" alt="Ferramentas Valfre"/></div>
-<div className="hdr-center"<div className="hdr-cep"onClick={()=>alert("Calculadora de frete será ativada em breve")}><I.Pin/><span>Enviar para:<br/><b>Informe o CEP</b></span></div><div className="search-box"><input placeholder="Buscar produtos" value={sq} onChange={e=>sSQ(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doS()}/><button className="s-btn" onClick={doS}><I.S/></button></div></div>
+<div className="hdr-center">
+
+<div
+className="hdr-cep"
+onClick={()=>alert("Calculadora de frete em breve")}
+>
+<I.Pin/>
+<span>Enviar para:<br/><b>Informe o CEP</b></span>
+</div>
+
+<div className="search-box">
+<input
+placeholder="Buscar produtos"
+value={sq}
+onChange={e=>sSQ(e.target.value)}
+onKeyDown={e=>e.key==="Enter"&&doS()}
+/>
+
+<button className="s-btn" onClick={doS}>
+<I.S/>
+</button>
+
+</div>
+
+</div>
 <div className="hdr-actions"><a href={CFG.WA_URL} target="_blank" className="hdr-btn"><I.Ph/><span className="label-text">Televendas</span></a><button className="hdr-btn"><I.Ord/><span className="label-text">Pedidos</span></button><button className="hdr-btn"><I.U/><span className="label-text">Entre ou<br/>Cadastre-se</span></button><button className="hdr-btn" onClick={()=>sCO(true)}><I.C/><span className="label-text">Carrinho</span>{cCnt>0&&<div className="cart-badge">{cCnt}</div>}</button></div>
 </div></header>
 {/* CAT NAV */}
