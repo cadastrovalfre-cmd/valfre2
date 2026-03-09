@@ -243,6 +243,7 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
         <div className="h-tag">{s.tag}</div>
         <h1 className="h-title">{s.t}</h1>
         <p className="h-sub">{s.s}</p>
+
         <button
           className="h-btn"
           onClick={()=>{
@@ -252,24 +253,21 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
         >
           {s.b} <I.R/>
         </button>
+
       </div>
     ))}
   </div>
 
   <button
     className="car-arrow l"
-    onClick={()=>{
-      sCi((prev)=>(prev-1+homeSlides.length)%homeSlides.length);
-    }}
+    onClick={()=>sCi((p)=>(p-1+homeSlides.length)%homeSlides.length)}
   >
     ❮
   </button>
 
   <button
     className="car-arrow r"
-    onClick={()=>{
-      sCi((prev)=>(prev+1)%homeSlides.length);
-    }}
+    onClick={()=>sCi((p)=>(p+1)%homeSlides.length)}
   >
     ❯
   </button>
@@ -282,7 +280,8 @@ onKeyDown={e=>e.key==="Enter"&&doS()}
         onClick={()=>sCi(i)}
       />
     ))}
- 
+  </div>
+
 </div>
 
 <div className="car-slide" style={{background:"linear-gradient(135deg,#E87A1D,#D06A10)"}}>
