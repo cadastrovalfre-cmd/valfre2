@@ -88,11 +88,15 @@ const url = "/api/products?page=" + (p.page || 1);
 const fmt=p=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(p);
 const gImg = (p) => {
 
-if(p.image && p.image.startsWith("http")) return p.image
+if(p.image && p.image !== "") return p.image
 
 if(p.ProductImage && p.ProductImage.length > 0){
 
 return p.ProductImage[0].https || p.ProductImage[0].http
+
+}
+
+return "https://dummyimage.com/400x400/1b3a5c/ffffff&text=VALFRE"
 
 }
 
