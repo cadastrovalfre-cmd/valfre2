@@ -195,7 +195,7 @@ const TrayAuth = {
   async register(data) {
     if(!CFG.TRAY_URL) return {ok:false, msg:'API não configurada'};
     try {
-      const base = CFG.TRAY_URL.replace(/\\/+$/,'');
+      const base = CFG.TRAY_URL.replace(/\/+$/,'');
       const url = base + '/customers';
       const body = {
         Customer: {
@@ -239,7 +239,7 @@ const TrayAuth = {
   async login(email, password) {
     // Tray não tem endpoint de login via web_api público — 
     // redirecionar para loja
-    const storeUrl = CFG.TRAY_STORE_URL || CFG.TRAY_URL.replace(/\\/web_api\\/?$/,'');
+    const storeUrl = CFG.TRAY_STORE_URL || CFG.TRAY_URL.replace(/\/web_api\/?$/,'');
     window.open(storeUrl + '/loja/login.php?loja=' + CFG.TRAY_SID, '_blank');
     return {ok:true, redirect:true};
   }
@@ -838,7 +838,7 @@ function App(){
       <div className="pol-pg">
        <h1>📦 Meus Pedidos</h1>
        <p>Para consultar seus pedidos, acesse sua conta na nossa loja.</p>
-       <button className="auth-btn" style={{marginTop:16,width:"auto",padding:"12px 28px"}} onClick={()=>{const s=CFG.TRAY_STORE_URL||CFG.TRAY_URL.replace(/\\/web_api\\/?$/,"");window.open(s+"/loja/login.php?loja="+CFG.TRAY_SID,"_blank")}}>Acessar Minha Conta</button>
+       <button className="auth-btn" style={{marginTop:16,width:"auto",padding:"12px 28px"}} onClick={()=>{const s=CFG.TRAY_STORE_URL||CFG.TRAY_URL.replace(/\/web_api\/?$/,"");window.open(s+"/loja/login.php?loja="+CFG.TRAY_SID,"_blank")}}>Acessar Minha Conta</button>
       </div>
      </div>
     )}
