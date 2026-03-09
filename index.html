@@ -33,12 +33,11 @@ const TrayAPI={
    const base = CFG.TRAY_URL.replace(/\/+$/,"");
 
    const url =
-    base +
-    (base.endsWith("/web_api") ? "" : "/web_api") +
-    "/products?access_token=" +
-    CFG.TRAY_TOKEN +
-    "&limit=" + (p.limit || 50) +
-    "&page=" + (p.page || 1);
+ base +
+ "/products/?access_token=" +
+ CFG.TRAY_TOKEN +
+ "&limit=" + (p.limit || 50) +
+ "&page=" + (p.page || 1);
 
    const r = await fetch(url);
 
