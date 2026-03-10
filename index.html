@@ -139,8 +139,8 @@ const TinyAPI={
         }
       }
       /* Fallback: campo imagem_url ou foto */
-      if(!img)img=p.imagem_url||p.foto||p.url_imagem||p.imagem||p.link_imagem||p.url_foto||p.url||"";
-}catch(e){}
+      if(!img)img=p.imagem_url||p.foto||p.url_imagem||p.imagem||"";
+    }catch(e){}
     /* Estoque: Tiny usa 'estoque' ou 'saldo' */
     const stockVal=(()=>{
       const candidates=[p.saldo_fisico,p.saldo,p.estoque,p.estoqueAtual];
