@@ -108,15 +108,15 @@ export default async function handler(req, res) {
 
       let description = "";
 
-      if (p.description && p.description !== "") {
-
-        description = p.description;
-
-      } else if (p.description_small) {
-
-        description = p.description_small;
-
-      }
+if (p.description_full && p.description_full !== "") {
+  description = p.description_full;
+}
+else if (p.description && p.description !== "") {
+  description = p.description;
+}
+else if (p.description_small) {
+  description = p.description_small;
+}
 
       // ===============================
       // RETORNO
