@@ -1,4 +1,4 @@
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   const token = process.env.TINY_TOKEN;
   if (!token) return res.status(500).json({ erro: 'TINY_TOKEN nao configurado' });
