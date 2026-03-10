@@ -247,22 +247,22 @@ const fetchProds=async()=>{
   }
   if(todos.length>0){
     sProds(todos);sTOk(true);
-    /* Busca imagens em background, 5 por vez para não sobrecarregar */
+    /* Busca imagens 1 por vez com 2s de intervalo para não bloquear a API do Tiny */
+    const imgCache={};
     const fetchImgs=async(lista)=>{
-      for(let i=0;i<lista.length;i+=5){
-        const lote=lista.slice(i,i+5);
-        await Promise.all(lote.map(async p=>{
-          if(p.image)return;/* já tem imagem */
-          try{
-            const det=await TinyAPI.getDetalhe(p.id);
-            if(!det?.retorno?.produto)return;
-            const dp=TinyAPI.parse(det.retorno.produto);
-            if(dp.image){
-              sProds(prev=>prev.map(x=>x.id===p.id?{...x,image:dp.image}:x));
-            }
-          }catch(e){}
-        }));
-        await new Promise(r=>setTimeout(r,300));/* pausa entre lotes */
+      for(let i=0;i<lista.length;i++){
+        const p=lista[i];
+        if(p.image||imgCache[p.id])continue;
+        try{
+          const det=await TinyAPI.getDetalhe(p.id);
+          if(!det?.retorno?.produto)continue;
+          const dp=TinyAPI.parse(det.retorno.produto);
+          if(dp.image){
+            imgCache[p.id]=dp.image;
+            sProds(prev=>prev.map(x=>x.id===p.id?{...x,image:dp.image}:x));
+          }
+        }catch(e){}
+        await new Promise(r=>setTimeout(r,2000));/* 1 chamada a cada 2 segundos */
       }
     };
     fetchImgs(todos);
