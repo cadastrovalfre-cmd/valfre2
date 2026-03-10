@@ -198,7 +198,7 @@ const MercadoPago={
   }
 };
 const fmt=p=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(p);
-const proxyImg=(url)=>{if(!url||url==="")return"https://dummyimage.com/400x400/e8e8e8/888888&text=SEM+IMAGEM";return"/api/tiny-imagem?url="+encodeURIComponent(url);};
+const proxyImg=(url)=>{if(!url||url==="")return"https://dummyimage.com/400x400/e8e8e8/888888&text=SEM+IMAGEM";return url;};
 const gImg=(p)=>{if(p.image&&p.image!=="")return proxyImg(p.image);if(p.ProductImage&&Array.isArray(p.ProductImage)&&p.ProductImage.length>0)return proxyImg(p.ProductImage[0].https||p.ProductImage[0].http);if(p.images&&p.images.length>0)return proxyImg(p.images[0]);return"https://dummyimage.com/400x400/e8e8e8/888888&text=SEM+IMAGEM";};
 function slugify(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
 function pushURL(path){try{window.history.pushState({path},"","/"+path);}catch(e){}}
