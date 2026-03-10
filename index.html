@@ -154,7 +154,7 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
 <div className="pd-wrap"><div className="pd-img">{img?<img src={img} alt={p.name}/>:<div style={{color:'#bbb',fontSize:14}}>Sem imagem</div>}</div><div className="pd-info">
 <div className="pd-bc"><span onClick={()=>nav("home")}>Início</span> › {pc&&<><span onClick={()=>nav("category",pc)}>{pc.name}</span> › </>}<span>{p.name}</span></div>
 <div className="pd-brand">{p.brand}</div><h1 className="pd-name">{p.name}</h1>
-<div className="pd-sku">REF: VAL-{String(p.id).padStart(6,"0")}{p.ean&&` | EAN: ${p.ean}`}</div>
+<div className="pd-sku">{p.reference?`REF: ${p.reference}`:`REF: VAL-${String(p.id).padStart(6,"0")}`}{p.ean&&p.ean!==p.reference&&` | EAN: ${p.ean}`}</div>
 <div style={{display:"flex",gap:2,marginBottom:10}}>{[1,2,3,4,5].map(i=><I.St key={i} f={i<=4}/>)}<span style={{fontSize:10,color:"#888",marginLeft:4}}>(4.0)</span></div>
 <div className="pd-pa">{hp&&<div className="pd-olp">de {fmt(p.price)}</div>}<div className="pd-pr">{fmt(dp)}</div>{inst>1&&<div className="pd-inst">ou até <b>{inst}x de {fmt(dp/inst)}</b> sem juros</div>}<div className="pd-pix">{fmt(pix)} à vista no PIX (10% desc.)</div></div>
 {oos?<><div className="pd-stk out"><span className="dot"/> Produto indisponível</div><OOSNotify/></>:<><div className="pd-stk in"><span className="dot"/> Em estoque{p.stock>0?` — ${p.stock} un`:""}</div><div className="pd-btns"><button className="pd-ac" onClick={()=>addC(p)}>Adicionar ao Carrinho</button><button className="pd-bn" onClick={()=>{addC(p);ck();}}>Comprar Agora</button></div></>}
