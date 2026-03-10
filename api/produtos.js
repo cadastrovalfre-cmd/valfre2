@@ -5,9 +5,9 @@ export default async function handler(req, res) {
     const page = Number(req.query.page || 1)
 
     const url =
-      "https://1225878.commercesuite.com.br/web_api/products" +
-      "?limit=50&page=" + page +
-      "&include=ProductStock,ProductImage,ProductVariant,ProductDescription"
+  "https://1225878.commercesuite.com.br/web_api/products" +
+  "?limit=50&page=" + page +
+  "&include=ProductStock,ProductImage,ProductVariant,ProductDescription";
 
     const response = await fetch(url)
 
