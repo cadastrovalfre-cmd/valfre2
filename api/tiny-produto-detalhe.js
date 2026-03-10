@@ -9,12 +9,7 @@ export default async function handler(req, res) {
 
   try {
 
-    const params = new URLSearchParams({
-      token,
-      id_produto: String(id),
-      formato: 'JSON'
-    });
-
+   const params = new URLSearchParams({ token, id_produto: String(id), formato: 'JSON' });
     const r = await fetch('https://api.tiny.com.br/api2/produto.obter.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
