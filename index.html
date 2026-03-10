@@ -97,6 +97,8 @@ function pushURL(path){try{window.history.pushState({path},"","/"+path);}catch(e
 // Produto disponivel: stock > 0, OU tem variacoes (has_variations), OU stock nao foi definido (assume disponivel)
 function isAvail(p){
 
+  if(p.available === true) return true
+
   if(p.has_variations) return true
 
   const s = parseInt(p.stock)
