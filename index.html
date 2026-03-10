@@ -115,6 +115,7 @@ const TinyAPI={
       return d;
     }catch(e){console.error("Tiny detalhe:",e);return null;}
   },
+  async getEstoque(id){
     try{
       const r=await fetch("/api/tiny-estoque?id="+id);
       const d=await r.json();
