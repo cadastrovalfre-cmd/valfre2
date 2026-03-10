@@ -75,6 +75,8 @@ export default async function handler(req, res) {
 
         warranty: p.warranty || "",
 
+        reference: p.reference || p.ean || "",
+
         ean: p.ean || "",
 
         slug: p.slug || "",
