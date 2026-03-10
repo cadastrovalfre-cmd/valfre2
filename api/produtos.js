@@ -2,71 +2,75 @@ export default async function handler(req, res) {
 
   try {
 
-    const page = Number(req.query.page || 1)
+    const page = Number(req.query.page || 1);
 
     const url =
-  "https://1225878.commercesuite.com.br/web_api/products" +
-  "?limit=50&page=" + page +
-  "&include=ProductStock,ProductImage,ProductVariant,ProductDescription";
+      "https://1225878.commercesuite.com.br/web_api/products" +
+      "?limit=50&page=" + page +
+      "&include=ProductStock,ProductImage,ProductVariant,ProductDescription";
 
-    const response = await fetch(url)
-
-    const data = await response.json()
+    const response = await fetch(url);
+    const data = await response.json();
 
     if (!data || !Array.isArray(data.Products)) {
-      return res.status(200).json([])
+      return res.status(200).json([]);
     }
 
-    const products = data.Products.map(item => {
+    const products = data.Products.map((item) => {
 
-      const p = item.Product || {}
+      const p = item.Product || {};
 
-      // =========================
+      // ===============================
       // VARIAÇÕES
-      // =========================
+      // ===============================
 
-      let variants = []
+      let variants = [];
 
-      if (p.ProductVariant && Array.isArray(p.ProductVariant)) {
+      if (Array.isArray(p.ProductVariant) && p.ProductVariant.length > 0) {
 
-        variants = p.ProductVariant.map(v => {
+        variants = p.ProductVariant.map((v) => ({
 
-          const stock =
-            Number(v.stock || v.quantity || 0)
+          id: Number(v.id) || 0,
 
-          return {
-            id: Number(v.id) || 0,
-            name: v.name || v.value || "",
-            stock: stock,
-            price: Number(v.price || p.price) || 0,
-            available: stock > 0
-          }
+          name:
+            v.name ||
+            v.value ||
+            v.title ||
+            v.Variant ||
+            v.VariantValue ||
+            "",
 
-        })
+          stock: Number(v.stock || v.quantity || 0),
+
+          price: Number(v.price || p.price) || 0,
+
+          image: v.image || null
+
+        }));
 
       }
 
-      const hasVariations = variants.length > 0
+      const hasVariations = variants.length > 0;
 
-      // =========================
+      // ===============================
       // ESTOQUE
-      // =========================
+      // ===============================
 
-      let stock = 0
+      let stock = 0;
 
-      if (p.ProductStock && Array.isArray(p.ProductStock)) {
+      if (Array.isArray(p.ProductStock) && p.ProductStock.length > 0) {
 
         stock = p.ProductStock.reduce((total, s) => {
 
-          return total + Number(s.quantity || 0)
+          return total + Number(s.quantity || s.stock || 0);
 
-        }, 0)
+        }, 0);
 
       }
 
-      if (stock === 0 && p.stock !== undefined) {
+      if (stock === 0 && p.stock !== undefined && p.stock !== null) {
 
-        stock = Number(p.stock) || 0
+        stock = Number(p.stock) || 0;
 
       }
 
@@ -74,47 +78,49 @@ export default async function handler(req, res) {
 
         stock = variants.reduce((total, v) => {
 
-          return total + Number(v.stock || 0)
+          return total + Number(v.stock || 0);
 
-        }, 0)
+        }, 0);
 
       }
 
-      // =========================
+      // ===============================
       // IMAGEM
-      // =========================
+      // ===============================
 
-      let image = null
+      let image = null;
 
-      if (p.ProductImage && p.ProductImage.length > 0) {
+      if (Array.isArray(p.ProductImage) && p.ProductImage.length > 0) {
 
-        image =
-          p.ProductImage[0].https ||
-          p.ProductImage[0].http ||
-          null
+        image = p.ProductImage[0].https || p.ProductImage[0].http || null;
 
       }
 
       if (!image && p.main_image) {
-        image = p.main_image
+
+        image = p.main_image;
+
       }
 
-      // =========================
+      // ===============================
       // DESCRIÇÃO
-      // =========================
+      // ===============================
 
-      let description = ""
+      let description = "";
 
       if (p.description && p.description !== "") {
-        description = p.description
-      }
-      else if (p.description_small) {
-        description = p.description_small
+
+        description = p.description;
+
+      } else if (p.description_small) {
+
+        description = p.description_small;
+
       }
 
-      // =========================
-      // RETURN
-      // =========================
+      // ===============================
+      // RETORNO
+      // ===============================
 
       return {
 
@@ -159,17 +165,17 @@ export default async function handler(req, res) {
 
         image: image
 
-      }
+      };
 
-    })
+    });
 
-    res.status(200).json(products)
+    return res.status(200).json(products);
 
   } catch (error) {
 
-    console.error("TRAY API ERROR:", error)
+    console.error("TRAY API ERROR:", error);
 
-    res.status(500).json([])
+    return res.status(500).json([]);
 
   }
 
