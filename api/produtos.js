@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+
   try {
 
     const page = req.query.page || 1;
@@ -17,11 +18,13 @@ export default async function handler(req, res) {
 
       const p = item.Product || {};
 
-      // pega estoque correto
       let stock = 0;
 
+      // soma estoque de todos depósitos
       if (p.ProductStock && p.ProductStock.length > 0) {
-        stock = Number(p.ProductStock[0].quantity);
+        stock = p.ProductStock.reduce((total, s) => {
+          return total + Number(s.quantity || 0);
+        }, 0);
       }
 
       return {
@@ -72,4 +75,5 @@ export default async function handler(req, res) {
     res.status(500).json([]);
 
   }
+
 }
