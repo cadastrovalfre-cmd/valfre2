@@ -116,30 +116,39 @@ const TinyAPI={
     }catch(e){console.error("Tiny estoque:",e);return -1;}
   },
   parse(p){
-    /* Tiny retorna campos em snake_case */
+    /* Campos reais da API Tiny v2 conforme documentação:
+       produtos.pesquisa.php retorna: id, nome, codigo, preco, preco_promocional,
+       unidade, gtin, tipoVariacao, situacao
+       produto.obter.php retorna adicionalmente: descricao, descricao_complementar,
+       peso_bruto, garantia, marca, imagens[], estoque */
     let img="";
-    try{if(p.imagens&&p.imagens.length>0)img=p.imagens[0].url||"";}catch(e){}
-    /* Estoque: Tiny usa 'estoque' ou 'saldo' */
+    try{
+      if(p.imagens&&Array.isArray(p.imagens)&&p.imagens.length>0){
+        const first=p.imagens[0];
+        img=first.url||first.link||first.imagem||(first.imagem&&(first.imagem.url||first.imagem.link))||"";
+      }
+    }catch(e){}
     const stockVal=(()=>{
-      const candidates=[p.saldo_fisico,p.saldo,p.estoque,p.estoqueAtual];
+      const candidates=[p.saldo_fisico,p.saldo,p.estoqueAtual,p.estoque];
       for(const v of candidates){if(v!==undefined&&v!==null&&v!==""){const n=+v;if(!isNaN(n))return n;}}
       return -1;
     })();
-    /* Preço promocional: Tiny usa 'preco_promocional' */
+    const preco=+(p.preco||0);
     const promo=+(p.preco_promocional||0);
-    const preco=+(p.preco||p.preco_venda||0);
+    /* Nome: pesquisa retorna "nome", obter retorna "descricao" */
+    const nome=p.nome||p.descricao||"";
     return{
-      id:+(p.id||p.codigo||0),
-      name:p.nome||p.descricao||"",
+      id:+(p.id||0),
+      name:nome,
       price:preco,
       promotional_price:(promo>0&&promo<preco)?promo:0,
-      brand:p.marca||p.fornecedor||"",
-      category_id:+(p.id_categoria||p.categoria_id||0),
+      brand:p.marca||"",
+      category_id:0,
       stock:stockVal,
-      description:p.descricao_complementar||p.descricao||"",
-      description_small:p.descricao||"",
+      description:p.descricao_complementar||"",
+      description_small:p.nome||p.descricao||"",
       image:img,
-      ean:p.gtin||p.ean||"",
+      ean:p.gtin||"",
       model:p.codigo||"",
       weight:p.peso_bruto?p.peso_bruto+"kg":"",
       warranty:p.garantia||"",
@@ -220,7 +229,8 @@ const fetchProds=async()=>{
       const lista=ret.produtos||[];
       if(lista.length===0)break;
       /* Filtrar apenas produtos simples (tipoVariacao N) ou pai (P), ignorar variações (V) */
-      const filtrados=lista.filter(x=>{const p=x.produto||x;return p.tipoVariacao!=="V"&&p.preco>0;});
+      /* Mostrar todos exceto variações filhas (V) - produtos pai (P) e simples (N) */
+      const filtrados=lista.filter(x=>{const p=x.produto||x;return p.tipoVariacao!=="V";});
       todos=todos.concat(filtrados.map(x=>TinyAPI.parse(x.produto||x)));
       if(lista.length<100)break;
       pag++;if(pag>20)break;
@@ -244,7 +254,18 @@ const nav=(p,d,sub)=>{sPg(p);setMegaOpen(false);sMM(false);if(p==="home"){sSC(nu
     let update={};
     if(det&&det.retorno&&det.retorno.produto){
       const p=det.retorno.produto;
-      const imgs=p.imagens&&p.imagens.length>0?p.imagens.map(i=>i.imagem&&(i.imagem.url||i.imagem.link)).filter(Boolean):[];
+      /* Imagens: Tiny retorna imagens[].imagem.url */
+      let imgs=[];
+      try{
+        if(p.imagens&&Array.isArray(p.imagens)){
+          imgs=p.imagens.map(i=>{
+            if(!i)return null;
+            if(typeof i==="string")return i;
+            const obj=i.imagem||i;
+            return obj.url||obj.link||obj.thumbnailUrl||null;
+          }).filter(Boolean);
+        }
+      }catch(e){}
       update.description=p.descricao_complementar||p.descricao||"";
       update.image=imgs[0]||"";
       update.images=imgs;
@@ -252,10 +273,14 @@ const nav=(p,d,sub)=>{sPg(p);setMegaOpen(false);sMM(false);if(p==="home"){sSC(nu
       update.warranty=p.garantia||"";
       update.model=p.codigo||"";
       update.brand=p.marca||"";
+      update.name=p.nome||p.descricao||d.name;
+      update.price=+(p.preco||d.price);
+      const promo=+(p.preco_promocional||0);
+      update.promotional_price=(promo>0&&promo<update.price)?promo:0;
     }
     if(est&&est.retorno&&est.retorno.produto){
-      const saldo=est.retorno.produto.saldo;
-      if(saldo!==undefined)update.stock=+saldo;
+      const saldo=+(est.retorno.produto.saldo??-1);
+      update.stock=saldo;
     }
     if(Object.keys(update).length>0){
       sSP(prev=>prev&&prev.id===d.id?{...prev,...update}:prev);
@@ -282,7 +307,7 @@ return(<div className="app-container">
 {CATS.map(c=>(<div key={c.id} className="mg-item"><button className="mg-btn" onClick={()=>{if(c.ch.length){sEC(p=>({...p,[c.id]:!p[c.id]}));}else{nav("category",c);}}}><span><span className="mg-icon">{c.icon}</span>{c.name}</span>{c.ch.length>0&&(ec[c.id]?<I.D/>:<I.R/>)}</button>{c.ch.length>0&&<div className={"mg-subs"+(ec[c.id]?" open":"")}><button className="mg-sub-link" onClick={()=>{nav("category",c);setMegaOpen(false);}}>Ver Todos</button>{c.ch.map(ch=><button key={ch.id} className="mg-sub-link" onClick={()=>{nav("category",c,ch);setMegaOpen(false);}}>{ch.name}</button>)}</div>}</div>))}
 </div>
 <main className="main-c">
-{pg==="home"&&(<>{loading&&prods.length===0&&<div style={{textAlign:"center",padding:80,color:"#888"}}><div style={{fontSize:40,marginBottom:12}}>⏳</div><p>Carregando produtos do estoque...</p></div>}<div className="car-wrap"><div className="car-track" style={{transform:`translateX(-${ci*100}%)`}}>{homeSlides.map((s,i)=>(<div key={i} className="car-slide" style={{background:s.bg}}><div className="h-tag">{s.tag}</div><h1 className="h-title">{s.t}</h1><p className="h-sub">{s.s}</p><button className="h-btn" onClick={()=>{if(s.c===-1)window.open(CFG.WA_URL,"_blank");else nav("category",CATS[s.c]);}}>{s.b} <I.R/></button></div>))}</div><button className="car-arrow l" onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}>❮</button><button className="car-arrow r" onClick={()=>sCi(p=>(p+1)%homeSlides.length)}>❯</button><div className="car-dots">{homeSlides.map((_,i)=>(<button key={i} className={"car-dot"+(ci===i?" active":"")} onClick={()=>sCi(i)}/>))}</div></div>
+{pg==="home"&&(<><div className="car-wrap"><div className="car-track" style={{transform:`translateX(-${ci*100}%)`}}>{homeSlides.map((s,i)=>(<div key={i} className="car-slide" style={{background:s.bg}}><div className="h-tag">{s.tag}</div><h1 className="h-title">{s.t}</h1><p className="h-sub">{s.s}</p><button className="h-btn" onClick={()=>{if(s.c===-1)window.open(CFG.WA_URL,"_blank");else nav("category",CATS[s.c]);}}>{s.b} <I.R/></button></div>))}</div><button className="car-arrow l" onClick={()=>sCi(p=>(p-1+homeSlides.length)%homeSlides.length)}>❮</button><button className="car-arrow r" onClick={()=>sCi(p=>(p+1)%homeSlides.length)}>❯</button><div className="car-dots">{homeSlides.map((_,i)=>(<button key={i} className={"car-dot"+(ci===i?" active":"")} onClick={()=>sCi(i)}/>))}</div></div>
 {promos.length>0&&(<><div className="sec-hdr"><h2 className="sec-title">Ofertas em Destaque</h2></div><div className="of-wrap"><div className="of-track" ref={oRef}>{promos.map(p=>{const d=Math.round((1-p.promotional_price/p.price)*100);return(<div key={p.id} className="of-card" onClick={()=>nav("product",p)}><div className="of-disc"><span className="pct">{d}%</span>DE DESCONTO</div><div className="of-body"><img className="of-img" src={gImg(p)} alt={p.name}/><div className="of-name">{p.name}</div><div className="of-old">DE: {fmt(p.price)}</div><div className="of-price">{fmt(p.promotional_price)}</div><div className="of-pix">à vista no Pix</div></div></div>);})}</div><button className="of-arrow l" onClick={()=>oRef.current?.scrollBy({left:-260,behavior:"smooth"})}>❮</button><button className="of-arrow r" onClick={()=>oRef.current?.scrollBy({left:260,behavior:"smooth"})}>❯</button></div></>)}
 <div className="sec-hdr"><h2 className="sec-title">Categorias</h2></div><div className="cat-grid">{CATS.filter(c=>c.id!==33&&c.id!==35).map(c=>(<div key={c.id} className="cat-card" onClick={()=>nav("category",c)}><div className="cat-icon">{c.icon}</div><div className="cat-label">{c.name}</div></div>))}</div>
 <div className="sec-hdr"><h2 className="sec-title">Produtos em Destaque</h2><span className="sec-link" onClick={()=>nav("category",CATS[1])}>Ver todos →</span></div><div className="p-grid">{prods.slice(0,8).map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>
