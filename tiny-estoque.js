@@ -1,10 +1,6 @@
 // api/tiny-estoque.js
-// Proxy serverless para API do Tiny ERP - busca estoque de produto específico
-
 export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ erro: 'Método não permitido' });
-  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   const token = process.env.TINY_TOKEN;
   if (!token) {
@@ -17,15 +13,24 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.tiny.com.br/api2/produto.obter.estoque.php?token=${token}&id=${id}&formato=JSON`;
-    const response = await fetch(url);
-    const data = await response.json();
+    // A API do Tiny exige POST com body urlencoded
+    const body = new URLSearchParams({
+      token: token,
+      id: String(id),
+      formato: 'JSON'
+    });
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 's-maxage=30'); // cache de 30s
+    const response = await fetch('https://api.tiny.com.br/api2/produto.obter.estoque.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    });
+
+    const data = await response.json();
+    res.setHeader('Cache-Control', 's-maxage=30');
     return res.status(200).json(data);
   } catch (err) {
     console.error('Erro Tiny estoque:', err);
-    return res.status(500).json({ erro: 'Falha ao buscar estoque do Tiny' });
+    return res.status(500).json({ erro: String(err) });
   }
 }
