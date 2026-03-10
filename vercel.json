@@ -1,8 +1,16 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
-  "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/tiny-produtos",
+      "destination": "/api/tiny-produtos"
+    },
+    {
+      "source": "/api/tiny-estoque",
+      "destination": "/api/tiny-estoque"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
