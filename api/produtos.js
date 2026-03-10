@@ -31,8 +31,10 @@ export default async function handler(req, res) {
 
         category_id: Number(p.category_id) || 0,
 
-        stock: Number(p.stock) || 0,
-
+stock:
+p.ProductStock?.[0]?.quantity ??
+Number(p.stock) ??
+0,
         description: p.description || "",
 
         description_small: p.description_small || "",
