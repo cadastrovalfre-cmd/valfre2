@@ -1,10 +1,11 @@
 export default async function handler(req, res) {
+
   try {
 
     const page = req.query.page || 1;
 
     const response = await fetch(
-      "https://1225878.commercesuite.com.br/web_api/products?limit=50&page=" + page
+      "https://1225878.commercesuite.com.br/web_api/products?limit=50&page=" + page + "&include=ProductStock"
     );
 
     const data = await response.json();
@@ -16,6 +17,12 @@ export default async function handler(req, res) {
     const products = data.Products.map((item) => {
 
       const p = item.Product || {};
+
+      // pega estoque correto
+      const stock =
+        p.ProductStock?.[0]?.quantity ??
+        Number(p.stock) ??
+        0;
 
       return {
 
@@ -29,12 +36,10 @@ export default async function handler(req, res) {
 
         brand: p.brand || "",
 
-        category_id: Number(p.category_id) || 0,
+        category_id: Number(p.category_id) || null,
 
-stock:
-p.ProductStock?.[0]?.quantity ??
-Number(p.stock) ??
-0,
+        stock: Number(stock),
+
         description: p.description || "",
 
         description_small: p.description_small || "",
@@ -67,4 +72,5 @@ Number(p.stock) ??
     res.status(500).json([]);
 
   }
+
 }
