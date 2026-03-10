@@ -1,16 +1,7 @@
 {
   "rewrites": [
-    {
-      "source": "/api/tiny-produtos",
-      "destination": "/api/tiny-produtos"
-    },
-    {
-      "source": "/api/tiny-estoque",
-      "destination": "/api/tiny-estoque"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/api/tiny-produtos", "destination": "/api/tiny-produtos.js" },
+    { "source": "/api/tiny-estoque", "destination": "/api/tiny-estoque.js" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
