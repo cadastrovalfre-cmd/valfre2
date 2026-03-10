@@ -677,44 +677,9 @@ function App(){
 
 {/* CART */}
    <div className={"c-ov"+(cO?" open":"")} onClick={()=>sCO(false)}/><div className={"c-sb"+(cO?" open":"")}><div className="c-hdr"><h2>Carrinho ({cCnt})</h2><button className="c-close" onClick={()=>sCO(false)}>✕</button></div>{cart.length===0?<div className="c-empty"><span style={{fontSize:40}}>🛒</span><p>Vazio</p><button className="p-btn" style={{width:"auto",padding:"10px 20px"}} onClick={()=>{sCO(false);nav("home")}}>Comprar</button></div>:<><div className="c-items">{cart.map(i=>{const ip=i.promotional_price>0&&i.promotional_price<i.price?i.promotional_price:i.price;return<div key={i.id} className="c-item"><div className="c-iimg"><img src={gImg(i)} alt={i.name}/></div><div className="c-iinfo"><div className="c-iname">{i.name}</div><div className="c-iprice">{fmt(ip*i.quantity)}</div><div className="c-iacts"><div className="c-iqty"><button onClick={()=>uQ(i.id,-1)}>−</button><span>{i.quantity}</span><button onClick={()=>uQ(i.id,1)}>+</button></div><button className="c-irm" onClick={()=>rI(i.id)}>🗑</button></div></div></div>})}</div><div className="c-ftr"><div className="c-total"><span className="c-tlbl">Total:</span><span className="c-tval">{fmt(cTot)}</span></div><button className="c-ckbtn" onClick={ck}>Finalizar Compra</button><button className="c-cont" onClick={()=>sCO(false)}>Continuar Comprando</button></div></>}</div>
-          </div>
-         </div>
-        );
-       })}
-      </div>
-      <div className="c-ftr">
-       <div className="c-total"><span className="c-tlbl">Total:</span><span className="c-tval">{fmt(cTot)}</span></div>
-       <button className="c-ckbtn" onClick={ck}>Finalizar Compra</button>
-       <button className="c-cont" onClick={()=>sCO(false)}>Continuar Comprando</button>
-      </div>
-     </>
-    }
-   </div>
 
 {/* MOBILE MENU */}
    <div className={"mm-ov"+(mm?" open":"")} onClick={()=>sMM(false)}/><div className={"mm"+(mm?" open":"")}><div className="mm-hdr"><h3>Menu</h3><button className="mm-close" onClick={()=>sMM(false)}>✕</button></div><div style={{padding:8,borderBottom:"1px solid #E8E8E8"}}><div style={{position:"relative"}}><input className="search-box" style={{background:"#F5F5F5",color:"#1A1A1A",width:"100%",padding:"10px 44px 10px 12px",border:"none",borderRadius:8,fontFamily:"Outfit",fontSize:13}} placeholder="Buscar..." value={sq} onChange={e=>sSQ(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"){doS();sMM(false)}}}/><button className="s-btn" onClick={()=>{doS();sMM(false)}} style={{borderRadius:"0 8px 8px 0"}}><I.S/></button></div></div><div><button className="mm-ci" onClick={()=>nav("home")}>🏠 Início</button>{CATS.map(c=><div key={c.id}><button className="mm-ci" onClick={()=>{if(c.ch.length)sEC(p=>({...p,[c.id]:!p[c.id]}));else nav("category",c)}}><span>{c.icon} {c.name}</span>{c.ch.length>0&&(ec[c.id]?<I.D/>:<I.R/>)}</button>{ec[c.id]&&c.ch.length>0&&<div className="mm-cc"><button className="mm-ch" onClick={()=>nav("category",c)}>Ver Todos</button>{c.ch.map(ch=><button key={ch.id} className="mm-ch" onClick={()=>nav("category",c)}>{ch.name}</button>)}</div>}</div>)}</div><div className="mm-links"><button className="mm-link" onClick={()=>nav("afiliados")}>💰 Afiliados</button><button className="mm-link" onClick={()=>nav("termos")}>Termos</button><button className="mm-link" onClick={()=>nav("privacidade")}>Privacidade</button><button className="mm-link" onClick={()=>nav("trocas")}>Trocas</button><button className="mm-link" onClick={()=>nav("entrega")}>Entrega</button><button className="mm-link" onClick={()=>nav("pagamento")}>Pagamento</button></div><div style={{padding:10,borderTop:"1px solid #E8E8E8"}}><a href={CFG.WA_URL} target="_blank" style={{display:"flex",alignItems:"center",gap:6,color:"#25D366",textDecoration:"none",fontWeight:600,fontSize:13}}><I.W/> (27) 99825-5545</a></div></div>
-    </div>
-    <div>
-     <button className="mm-ci" onClick={()=>nav("home")}>🏠 Início</button>
-     {CATS.map(c=>(
-      <div key={c.id}>
-       <button className="mm-ci" onClick={()=>{if(c.ch.length)sEC(p=>({...p,[c.id]:!p[c.id]}));else nav("category",c)}}><span>{c.icon} {c.name}</span>{c.ch.length>0&&(ec[c.id]?<I.D/>:<I.R/>)}</button>
-       {ec[c.id]&&c.ch.length>0&&<div className="mm-cc"><button className="mm-ch" onClick={()=>nav("category",c)}>Ver Todos</button>{c.ch.map(ch=><button key={ch.id} className="mm-ch" onClick={()=>nav("category",c)}>{ch.name}</button>)}</div>}
-      </div>
-     ))}
-    </div>
-    <div className="mm-links">
-     <button className="mm-link" onClick={()=>nav("afiliados")}>💰 Afiliados</button>
-     <button className="mm-link" onClick={()=>nav("termos")}>Termos</button>
-     <button className="mm-link" onClick={()=>nav("privacidade")}>Privacidade</button>
-     <button className="mm-link" onClick={()=>nav("trocas")}>Trocas</button>
-     <button className="mm-link" onClick={()=>nav("entrega")}>Entrega</button>
-     <button className="mm-link" onClick={()=>nav("pagamento")}>Pagamento</button>
-    </div>
-    <div style={{padding:10,borderTop:"1px solid #E8E8E8"}}>
-     <a href={CFG.WA_URL} target="_blank" style={{display:"flex",alignItems:"center",gap:6,color:"#25D366",textDecoration:"none",fontWeight:600,fontSize:13}}><I.W/> (27) 99825-5545</a>
-    </div>
-   </div>
 
 {/* ALERT */}
    {alrt&&<div className="alert-pop"><button className="a-close" onClick={()=>sAlrt(false)}>×</button><h4>🔔 ALERTA FERRAMENTAS VALFRE!</h4><p>Receba ofertas e cupons em primeira mão. Ative as notificações. É rápido: Clique em <b>aceitar</b>!</p><div className="alert-btns"><button className="a-dis" onClick={()=>{sAlrt(false);try{window.localStorage.setItem("valfre_alert_seen","1")}catch(e){}}}>Não, obrigado</button><button className="a-acc" onClick={()=>{sAlrt(false);try{window.localStorage.setItem("valfre_alert_seen","1")}catch(e){}}}>ACEITAR</button></div></div>}
