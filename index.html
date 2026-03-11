@@ -160,6 +160,7 @@ React.useEffect(() => {
     sAlrt(true);
   }
 }, []);;const[pdt,sPDT]=React.useState("desc");const[authTab,sAuthTab]=React.useState("login");const[megaOpen,setMegaOpen]=React.useState(false);const[mm,sMM]=React.useState(false);const oRef=React.useRef(null);
+React.useEffect(()=>{if(pg==="product"&&sP&&!sP.fullLoaded){TrayAPI.getProduct(sP.id).then(full=>{if(full)sSP(prev=>({...prev,...full,fullLoaded:true}));});}},[pg,sP]);               
 React.useEffect(()=>{if(pg!=="home")return;clearInterval(tr.current);tr.current=setInterval(()=>sCi(p=>(p+1)%homeSlides.length),5000);return()=>clearInterval(tr.current);},[pg]);
 React.useEffect(()=>{if(CFG.TRAY_URL&&CFG.TRAY_TOKEN){TrayAPI.get({limit:50}).then(d=>{if(!d)return;var items=Array.isArray(d)?d:(d.Products||d.products||[]);if(items.length>0){sProds(items.map(i=>TrayAPI.parse(i.Product||i.product||i)));sTOk(true);}}).catch(e=>console.error("Tray:",e));}},[]);
 const nav=(p,d,sub)=>{sPg(p);setMegaOpen(false);sMM(false);if(p==="home"){sSC(null);sSSub(null);sSP(null);pushURL("");}else if(p==="category"){sSC(d);sSSub(sub||null);pushURL(sub?sub.slug:d.slug);}else if(p==="product"){sSP(d);sPDT("desc");setSelVar(null);const pSlug=slugify(d.name);const pc=CATS.find(c=>c.ch.some(x=>x.id===d.category_id)||c.id===d.category_id);pushURL(pc?(pc.slug+"/"+pSlug):pSlug);}else if(p==="search"){sSR(d);pushURL("busca");}else if(p==="login"){sAuthTab("login");pushURL("login");}else if(p==="cadastro"){sAuthTab("register");pushURL("cadastro");}else{pushURL(p);}window.scrollTo({top:0,behavior:"smooth"});};
