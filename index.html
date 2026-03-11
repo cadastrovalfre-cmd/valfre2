@@ -99,9 +99,9 @@ function isAvail(p){
 
 if(p.available === true) return true
 
-if(p.has_variations) return true
+if(p.has_variations === true) return true
 
-const s = parseInt(p.stock)
+const s = Number(p.stock)
 
 if(!isNaN(s) && s > 0) return true
 
@@ -169,8 +169,82 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
 <div className="pd-sku">{p.reference?`REF: ${p.reference}`:`REF: VAL-${String(p.id).padStart(6,"0")}`}{p.ean&&p.ean!==p.reference&&` | EAN: ${p.ean}`}</div>
 <div style={{display:"flex",gap:2,marginBottom:10}}>{[1,2,3,4,5].map(i=><I.St key={i} f={i<=4}/>)}<span style={{fontSize:10,color:"#888",marginLeft:4}}>(4.0)</span></div>
 <div className="pd-pa">{hp&&<div className="pd-olp">de {fmt(p.price)}</div>}<div className="pd-pr">{fmt(dp)}</div>{inst>1&&<div className="pd-inst">ou até <b>{inst}x de {fmt(dp/inst)}</b> sem juros</div>}<div className="pd-pix">{fmt(pix)} à vista no PIX (10% desc.)</div></div>
-{oos?<><div className="pd-stk out"><span className="dot"/> Produto indisponível</div><OOSNotify/></>:<><div className="pd-stk in"><span className="dot"/> Em estoque{p.stock>0?` — ${p.stock} un`:""}</div><div className="pd-btns"><button className="pd-ac" onClick={()=>addC(p)}>Adicionar ao Carrinho</button><button className="pd-bn" onClick={()=>{addC(p);ck();}}>Comprar Agora</button></div></>}
-<FreteCalc/></div></div>
+{oos ? (
+
+<>
+
+<div className="pd-stk out">
+<span className="dot"/> Produto indisponível
+</div>
+
+<OOSNotify/>
+
+</>
+
+) : (
+
+<>
+
+<div className="pd-stk in">
+<span className="dot"/> Em estoque{p.stock>0?` — ${p.stock} un`:""}
+</div>
+
+
+{/* VARIAÇÕES DO PRODUTO */}
+{p.variants && p.variants.length > 0 && (
+
+<div style={{marginBottom:20}}>
+
+<h4 style={{fontSize:14,marginBottom:8}}>Escolha uma opção</h4>
+
+<div style={{
+display:"flex",
+flexWrap:"wrap",
+gap:8
+}}>
+
+{p.variants.map(v => (
+
+<button
+key={v.id}
+style={{
+padding:"8px 12px",
+border:"1px solid #ddd",
+borderRadius:6,
+background:"#fff",
+cursor:"pointer",
+fontSize:12
+}}
+>
+
+{v.name || v.value || "Variação"}
+
+</button>
+
+))}
+
+</div>
+
+</div>
+
+)}
+
+
+<div className="pd-btns">
+
+<button className="pd-ac" onClick={()=>addC(p)}>
+Adicionar ao Carrinho
+</button>
+
+<button className="pd-bn" onClick={()=>{addC(p);ck();}}>
+Comprar Agora
+</button>
+
+</div>
+
+</>
+
+)}<FreteCalc/></div></div>
 <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:24}}><div className="pd-tabs"><button className={"pd-tab"+(pdt==="desc"?" active":"")} onClick={()=>sPDT("desc")}>Descrição</button><button className={"pd-tab"+(pdt==="ficha"?" active":"")} onClick={()=>sPDT("ficha")}>Ficha Técnica</button></div><div className="pd-tc">{pdt==="desc"&&<><h3>Descrição</h3>{p.description?<div dangerouslySetInnerHTML={{__html:p.description}}/>:<p>Produto disponível na Ferramentas Valfre.</p>}</>}{pdt==="ficha"&&<><h3>Ficha Técnica</h3><table><tbody>{p.brand&&<tr><td>Marca</td><td>{p.brand}</td></tr>}{p.model&&<tr><td>Modelo</td><td>{p.model}</td></tr>}{p.weight&&<tr><td>Peso</td><td>{p.weight}</td></tr>}{p.warranty&&<tr><td>Garantia</td><td>{p.warranty}</td></tr>}<tr><td>Disponibilidade</td><td>{oos?'Indisponível':'Em estoque'}</td></tr></tbody></table></>}</div></div>
 {rel.length>0&&<><div className="sec-hdr"><h2 className="sec-title">Relacionados</h2></div><div className="p-grid">{rel.map(x=><PC key={x.id} p={x} onClick={x=>nav("product",x)} onAdd={addC}/>)}</div></>}
 </>);})()}
