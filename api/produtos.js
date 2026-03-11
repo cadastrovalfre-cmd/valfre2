@@ -182,7 +182,7 @@ export default async function handler(req, res) {
         available: available,
         has_variations: hasVariations,
         variants: variants,
-        description: description,
+        description: p.description || p.description_small || "",
         description_small: p.description_small || "",
         model: p.model || "",
         weight: p.weight || "",
