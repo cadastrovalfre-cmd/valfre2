@@ -193,7 +193,6 @@ return(<div className="app-container">
 const p=sP;
 const isVar=p.variations&&p.variations.length>0;
 
-// Pega preço e estoque da variação selecionada (se houver)
 const activePrice=selVar&&selVar.price>0?Number(selVar.price):p.price;
 const activePromo=selVar&&selVar.promotional_price>0?Number(selVar.promotional_price):p.promotional_price;
 const hp=(activePromo||0)>0&&(activePromo||0)<(activePrice||0);
@@ -203,14 +202,19 @@ const inst=Math.min(12,Math.max(1,Math.floor(dp/20)));
 const pc=CATS.find(c=>c.ch.some(x=>x.id===p.category_id)||c.id===p.category_id)||null;
 const rel=prods.filter(x=>x.id!==p.id).slice(0,4);
 
-// Se tem variação mas não selecionou, assume estoque 1 para NÃO bloquear a tela. 
-// Se selecionou, pega o estoque exato da variação escolhida.
-const activeStock=selVar?(selVar.stock!==undefined&&Number(selVar.stock)>0?Number(selVar.stock):1):(isVar?1:(p.stock||0));
-const oos=activeStock<=0;
+// Lê o estoque EXATO (sem "gambiarras"). Se está carregando, não deixa vender.
+const isLoadingStock = !p.fullLoaded;
+const activeStock = isVar ? (selVar ? Number(selVar.stock||0) : (p.fullLoaded ? p.variations.reduce((a,v)=>a+Number(v.stock||0),0) : 0)) : Number(p.stock||0);
+const oos = !isLoadingStock && activeStock <= 0;
 
 const handleAdd=()=>{
+  if(isLoadingStock) return;
   if(isVar&&!selVar){
-    alert("Por favor, selecione uma opção (variação) antes de comprar!");
+    alert("Por favor, selecione uma opção antes de adicionar ao carrinho.");
+    return;
+  }
+  if(activeStock<=0){
+    alert("Produto indisponível no momento.");
     return;
   }
   const varName=selVar&&selVar.Sku&&selVar.Sku.length>0?selVar.Sku.map(s=>s.value).join(" - "):("Opção "+selVar?.id);
@@ -226,9 +230,49 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
 <div style={{display:"flex",gap:2,marginBottom:10}}>{[1,2,3,4,5].map(i=><I.St key={i} f={i<=4}/>)}<span style={{fontSize:10,color:"#888",marginLeft:4}}>(4.0)</span></div>
 <div className="pd-pa">{hp&&<div className="pd-olp">de {fmt(activePrice)}</div>}<div className="pd-pr">{fmt(dp)}</div>{inst>1&&<div className="pd-inst">ou até <b>{inst}x de {fmt(dp/inst)}</b> sem juros</div>}<div className="pd-pix">{fmt(pix)} à vista no PIX (10% desc.)</div></div>
 
-{isVar&&(<div style={{marginBottom:16,background:'#fff',padding:12,borderRadius:12,border:'1px solid #E8E8E8'}}><div style={{fontSize:13,fontWeight:600,marginBottom:8,color:'#1B3A5C'}}>Selecione a Opção:</div><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{p.variations.map(v=>{const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);const isSelected=selVar?.id===v.id;return(<button key={v.id} onClick={()=>setSelVar(v)} style={{padding:'8px 16px',border:isSelected?'2px solid #E87A1D':'2px solid #D1D1D1',borderRadius:8,background:isSelected?'#FFF3E8':'#fff',color:isSelected?'#E87A1D':'#444',cursor:'pointer',fontWeight:isSelected?700:500,fontFamily:'Outfit, sans-serif'}}>{varName}</button>)})}</div></div>)}
+{isVar&&(<div style={{marginBottom:16,background:'#fff',padding:12,borderRadius:12,border:'1px solid #E8E8E8'}}><div style={{fontSize:13,fontWeight:600,marginBottom:8,color:'#1B3A5C'}}>Selecione a Opção:</div><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+  {p.variations.map(v=>{
+    const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);
+    const isSelected=selVar?.id===v.id;
+    // Verifica se a variação específica está sem estoque
+    const isVarOOS = p.fullLoaded && Number(v.stock||0) <= 0;
+    
+    return(
+      <button 
+        key={v.id} 
+        disabled={isVarOOS}
+        onClick={()=>!isVarOOS && setSelVar(v)} 
+        style={{
+          padding:'8px 16px',
+          border:isSelected?'2px solid #E87A1D':(isVarOOS?'2px solid #EEE':'2px solid #D1D1D1'),
+          borderRadius:8,
+          background:isSelected?'#FFF3E8':(isVarOOS?'#F5F5F5':'#fff'),
+          color:isSelected?'#E87A1D':(isVarOOS?'#AAA':'#444'),
+          cursor:isVarOOS?'not-allowed':'pointer',
+          fontWeight:isSelected?700:500,
+          fontFamily:'Outfit, sans-serif',
+          textDecoration:isVarOOS?'line-through':'none',
+          opacity:isVarOOS?0.6:1
+        }}>
+        {varName}
+      </button>
+    )
+  })}
+</div></div>)}
 
-{oos?<><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>:<><div className={"pd-stk in"}><span className="dot"/> Em estoque{activeStock>0?` — ${activeStock} un`:""}</div><div className="pd-btns"><button className="pd-ac" onClick={handleAdd}>Adicionar ao Carrinho</button><button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)) ck();}}>Comprar Agora</button></div></>}
+{isLoadingStock ? (
+  <div style={{padding: '16px', textAlign: 'center', background: '#F5F5F5', borderRadius: 8, marginBottom: 16, fontSize: 13, color: '#666'}}>
+     ⏳ Carregando disponibilidade...
+  </div>
+) : oos ? (
+  <><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>
+) : (
+  <><div className={"pd-stk in"}><span className="dot"/> Em estoque</div>
+  <div className="pd-btns">
+    <button className="pd-ac" onClick={handleAdd}>Adicionar ao Carrinho</button>
+    <button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)&&activeStock>0) ck();}}>Comprar Agora</button>
+  </div></>
+)}
 <FreteCalc/>
 </div></div>
 <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:24}}><div className="pd-tabs"><button className={"pd-tab"+(pdt==="desc"?" active":"")} onClick={()=>sPDT("desc")}>Descrição</button><button className={"pd-tab"+(pdt==="ficha"?" active":"")} onClick={()=>sPDT("ficha")}>Ficha Técnica</button></div><div className="pd-tc">{pdt==="desc"&&<><h3>Descrição</h3><div dangerouslySetInnerHTML={{ __html: p.description || "Produto disponível na Ferramentas Valfre." }} /></>}{pdt==="ficha"&&<><h3>Ficha Técnica</h3><table><tbody>{p.brand&&<tr><td>Marca</td><td>{p.brand}</td></tr>}{p.model&&<tr><td>Modelo</td><td>{p.model}</td></tr>}{p.weight&&<tr><td>Peso</td><td>{p.weight}</td></tr>}{p.warranty&&<tr><td>Garantia</td><td>{p.warranty}</td></tr>}<tr><td>Disponibilidade</td><td>{oos?'Indisponível':'Em estoque'}</td></tr></tbody></table></>}</div></div>
