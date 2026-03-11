@@ -202,23 +202,33 @@ const inst=Math.min(12,Math.max(1,Math.floor(dp/20)));
 const pc=CATS.find(c=>c.ch.some(x=>x.id===p.category_id)||c.id===p.category_id)||null;
 const rel=prods.filter(x=>x.id!==p.id).slice(0,4);
 
-// Lê o estoque EXATO (sem "gambiarras"). Se está carregando, não deixa vender.
-const isLoadingStock = !p.fullLoaded;
-const activeStock = isVar ? (selVar ? Number(selVar.stock||0) : (p.fullLoaded ? p.variations.reduce((a,v)=>a+Number(v.stock||0),0) : 0)) : Number(p.stock||0);
-const oos = !isLoadingStock && activeStock <= 0;
+// Lê o estoque real do produto ou da variação
+let currentStock = 0;
+if (isVar) {
+    if (selVar) {
+        currentStock = parseInt(selVar.stock) || 0;
+    } else {
+        currentStock = p.variations.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
+    }
+} else {
+    currentStock = parseInt(p.stock) || 0;
+}
+
+// O Produto só é declarado esgotado SE a API já terminou de carregar os dados
+const oos = p.fullLoaded && currentStock <= 0;
 
 const handleAdd=()=>{
-  if(isLoadingStock) return;
+  if(!p.fullLoaded) return;
   if(isVar&&!selVar){
     alert("Por favor, selecione uma opção antes de adicionar ao carrinho.");
     return;
   }
-  if(activeStock<=0){
+  if(currentStock<=0){
     alert("Produto indisponível no momento.");
     return;
   }
   const varName=selVar&&selVar.Sku&&selVar.Sku.length>0?selVar.Sku.map(s=>s.value).join(" - "):("Opção "+selVar?.id);
-  const itemToAdd=selVar?{...p, variations:[], stock:activeStock, variation_id:selVar.id, name:p.name+" ("+varName+")", price:activePrice, promotional_price:activePromo}:p;
+  const itemToAdd=selVar?{...p, variations:[], stock:currentStock, variation_id:selVar.id, name:p.name+" ("+varName+")", price:activePrice, promotional_price:activePromo}:p;
   addC(itemToAdd);
 };
 
@@ -234,8 +244,10 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
   {p.variations.map(v=>{
     const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);
     const isSelected=selVar?.id===v.id;
-    // Verifica se a variação específica está sem estoque
-    const isVarOOS = p.fullLoaded && Number(v.stock||0) <= 0;
+    const vStock=parseInt(v.stock)||0;
+    
+    // Deixa a variação cinza e bloqueada se o estoque dela for zero
+    const isVarOOS=p.fullLoaded && vStock<=0;
     
     return(
       <button 
@@ -260,9 +272,9 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
   })}
 </div></div>)}
 
-{isLoadingStock ? (
+{!p.fullLoaded ? (
   <div style={{padding: '16px', textAlign: 'center', background: '#F5F5F5', borderRadius: 8, marginBottom: 16, fontSize: 13, color: '#666'}}>
-     ⏳ Carregando disponibilidade...
+     ⏳ Atualizando estoque...
   </div>
 ) : oos ? (
   <><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>
@@ -270,7 +282,7 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
   <><div className={"pd-stk in"}><span className="dot"/> Em estoque</div>
   <div className="pd-btns">
     <button className="pd-ac" onClick={handleAdd}>Adicionar ao Carrinho</button>
-    <button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)&&activeStock>0) ck();}}>Comprar Agora</button>
+    <button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)&&currentStock>0) ck();}}>Comprar Agora</button>
   </div></>
 )}
 <FreteCalc/>
