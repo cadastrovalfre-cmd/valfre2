@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       pagina: all ? 1 : pagina,
       limite,
       totalPaginas: Number(resultado?.numero_paginas || resultado?.totalPaginas || 1),
-      totalRegistros: produtos.length,
+      totalRegistros: Number(resultado?.total_registros || resultado?.totalRegistros || produtos.length),
       origem: 'tiny',
       produtos,
     });
