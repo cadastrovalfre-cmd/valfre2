@@ -202,33 +202,35 @@ const inst=Math.min(12,Math.max(1,Math.floor(dp/20)));
 const pc=CATS.find(c=>c.ch.some(x=>x.id===p.category_id)||c.id===p.category_id)||null;
 const rel=prods.filter(x=>x.id!==p.id).slice(0,4);
 
-// Lê o estoque real do produto ou da variação
-let currentStock = 0;
-if (isVar) {
-    if (selVar) {
-        currentStock = parseInt(selVar.stock) || 0;
-    } else {
-        currentStock = p.variations.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
-    }
+// LÓGICA OTIMISTA: Assumimos que TEM estoque, a menos que a Tray confirme que é 0.
+let isOOS = false;
+if (p.fullLoaded) {
+  if (isVar) {
+     if (selVar) {
+       isOOS = Number(selVar.stock||0) <= 0;
+     } else {
+       const totalVarStock = p.variations.reduce((sum, v) => sum + Number(v.stock||0), 0);
+       isOOS = totalVarStock <= 0;
+     }
+  } else {
+     isOOS = Number(p.stock||0) <= 0;
+  }
 } else {
-    currentStock = parseInt(p.stock) || 0;
+   // Se não carregou ainda, olhamos pro dado básico da listagem. 
+   isOOS = p.stock !== undefined && p.stock <= 0 && !isVar; 
 }
 
-// O Produto só é declarado esgotado SE a API já terminou de carregar os dados
-const oos = p.fullLoaded && currentStock <= 0;
-
 const handleAdd=()=>{
-  if(!p.fullLoaded) return;
   if(isVar&&!selVar){
     alert("Por favor, selecione uma opção antes de adicionar ao carrinho.");
     return;
   }
-  if(currentStock<=0){
+  if(isOOS){
     alert("Produto indisponível no momento.");
     return;
   }
   const varName=selVar&&selVar.Sku&&selVar.Sku.length>0?selVar.Sku.map(s=>s.value).join(" - "):("Opção "+selVar?.id);
-  const itemToAdd=selVar?{...p, variations:[], stock:currentStock, variation_id:selVar.id, name:p.name+" ("+varName+")", price:activePrice, promotional_price:activePromo}:p;
+  const itemToAdd=selVar?{...p, variations:[], variation_id:selVar.id, name:p.name+" ("+varName+")", price:activePrice, promotional_price:activePromo}:p;
   addC(itemToAdd);
 };
 
@@ -244,10 +246,9 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
   {p.variations.map(v=>{
     const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);
     const isSelected=selVar?.id===v.id;
-    const vStock=parseInt(v.stock)||0;
     
-    // Deixa a variação cinza e bloqueada se o estoque dela for zero
-    const isVarOOS=p.fullLoaded && vStock<=0;
+    // Só desabilita e deixa a variação cinza se a API confirmar que o estoque é 0
+    const isVarOOS = p.fullLoaded && Number(v.stock||0) <= 0;
     
     return(
       <button 
@@ -264,7 +265,7 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
           fontWeight:isSelected?700:500,
           fontFamily:'Outfit, sans-serif',
           textDecoration:isVarOOS?'line-through':'none',
-          opacity:isVarOOS?0.6:1
+          opacity:isVarOOS?0.5:1
         }}>
         {varName}
       </button>
@@ -272,22 +273,18 @@ return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("ho
   })}
 </div></div>)}
 
-{!p.fullLoaded ? (
-  <div style={{padding: '16px', textAlign: 'center', background: '#F5F5F5', borderRadius: 8, marginBottom: 16, fontSize: 13, color: '#666'}}>
-     ⏳ Atualizando estoque...
-  </div>
-) : oos ? (
-  <><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>
+{isOOS ? (
+  <><div className={"pd-stk out"}><span className="dot"/> Produto Esgotado</div><OOSNotify/></>
 ) : (
   <><div className={"pd-stk in"}><span className="dot"/> Em estoque</div>
   <div className="pd-btns">
     <button className="pd-ac" onClick={handleAdd}>Adicionar ao Carrinho</button>
-    <button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)&&currentStock>0) ck();}}>Comprar Agora</button>
+    <button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)&&!isOOS) ck();}}>Comprar Agora</button>
   </div></>
 )}
 <FreteCalc/>
 </div></div>
-<div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:24}}><div className="pd-tabs"><button className={"pd-tab"+(pdt==="desc"?" active":"")} onClick={()=>sPDT("desc")}>Descrição</button><button className={"pd-tab"+(pdt==="ficha"?" active":"")} onClick={()=>sPDT("ficha")}>Ficha Técnica</button></div><div className="pd-tc">{pdt==="desc"&&<><h3>Descrição</h3><div dangerouslySetInnerHTML={{ __html: p.description || "Produto disponível na Ferramentas Valfre." }} /></>}{pdt==="ficha"&&<><h3>Ficha Técnica</h3><table><tbody>{p.brand&&<tr><td>Marca</td><td>{p.brand}</td></tr>}{p.model&&<tr><td>Modelo</td><td>{p.model}</td></tr>}{p.weight&&<tr><td>Peso</td><td>{p.weight}</td></tr>}{p.warranty&&<tr><td>Garantia</td><td>{p.warranty}</td></tr>}<tr><td>Disponibilidade</td><td>{oos?'Indisponível':'Em estoque'}</td></tr></tbody></table></>}</div></div>
+<div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:24}}><div className="pd-tabs"><button className={"pd-tab"+(pdt==="desc"?" active":"")} onClick={()=>sPDT("desc")}>Descrição</button><button className={"pd-tab"+(pdt==="ficha"?" active":"")} onClick={()=>sPDT("ficha")}>Ficha Técnica</button></div><div className="pd-tc">{pdt==="desc"&&<><h3>Descrição</h3><div dangerouslySetInnerHTML={{ __html: p.description || "Produto disponível na Ferramentas Valfre." }} /></>}{pdt==="ficha"&&<><h3>Ficha Técnica</h3><table><tbody>{p.brand&&<tr><td>Marca</td><td>{p.brand}</td></tr>}{p.model&&<tr><td>Modelo</td><td>{p.model}</td></tr>}{p.weight&&<tr><td>Peso</td><td>{p.weight}</td></tr>}{p.warranty&&<tr><td>Garantia</td><td>{p.warranty}</td></tr>}<tr><td>Disponibilidade</td><td>{isOOS?'Indisponível':'Em estoque'}</td></tr></tbody></table></>}</div></div>
 <div className="sec-hdr"><h2 className="sec-title">Relacionados</h2></div><div className="p-grid">{rel.map(x=><PC key={x.id} p={x} onClick={x=>nav("product",x)} onAdd={addC}/>)}</div>
 </>);})()}
 {pg==="search"&&(<><button className="back-btn" onClick={()=>nav("home")}><I.AL/> Voltar</button><div className="sec-hdr"><h2 className="sec-title">Resultados ({sr?.length||0})</h2></div>{sr?.length>0?<div className="p-grid">{sr.map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>:<div style={{textAlign:"center",padding:48,color:"#888"}}><p style={{fontSize:40}}>🔍</p><p>Nenhum produto encontrado.</p></div>}</>)}
