@@ -206,7 +206,7 @@ const rel=prods.filter(x=>x.id!==p.id).slice(0,4);
 
 // Se tem variação mas não selecionou, assume estoque 1 para NÃO bloquear a tela. 
 // Se selecionou, pega o estoque exato da variação escolhida.
-const activeStock=selVar?Number(selVar.stock||0):(isVar?1:(p.stock||0));
+const activeStock=selVar?(selVar.stock!==undefined&&Number(selVar.stock)>0?Number(selVar.stock):1):(isVar?1:(p.stock||0));
 const oos=activeStock<=0;
 
 const handleAdd=()=>{
