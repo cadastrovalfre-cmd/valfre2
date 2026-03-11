@@ -108,12 +108,66 @@ box-shadow:4px 0 24px rgba(0,0,0,.15)
 @media(max-width:1024px){.p-grid{grid-template-columns:repeat(3,1fr)}.cat-grid{grid-template-columns:repeat(3,1fr)}.footer-inner{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){.top-bar,.aff-bar{display:none}.menu-toggle{display:flex}.label-text{display:none}.hdr-center{display:none}.logo-area img{height:40px}.cat-nav-inner{padding:0 8px}.cn-item{padding:8px 8px;font-size:10px}.cn-cat-btn{padding:8px 12px;font-size:10px}.p-grid{grid-template-columns:repeat(2,1fr);gap:8px}.cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}.car-slide{padding:24px 16px}.h-title{font-size:22px}.h-sub{font-size:12px}.car-arrow{width:30px;height:30px;font-size:14px}.pd-wrap{grid-template-columns:1fr;gap:16px;padding:16px}.pd-pr{font-size:22px}.pd-btns{flex-direction:column}.cp-layout{grid-template-columns:1fr}.f-side{position:static}.footer-inner{grid-template-columns:1fr;gap:16px}.main-c{padding:10px}.sec-title{font-size:17px}.nl-sec{padding:20px 14px}.nl-form{flex-direction:column}.alert-pop{width:calc(100% - 24px);right:12px;top:auto;bottom:12px}.of-arrow{display:none}}
 @media(max-width:480px){.p-grid{gap:6px}.p-info{padding:8px}.p-name{font-size:11px;height:28px}.p-price{font-size:15px}.p-btn{padding:7px;font-size:11px}.coupon-bar{font-size:11px;padding:6px 8px}}
+/* Checkout Styles */
+.checkout-page{max-width:1100px;margin:0 auto}.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:24px}
+.ck-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #E8E8E8;margin-bottom:16px}
+.ck-card h3{font-size:18px;font-weight:700;color:#1B3A5C;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #E8E8E8;display:flex;align-items:center;gap:10px}
+.ck-card h3 .step{width:28px;height:28px;background:#E87A1D;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.ck-card h3 .step.done{background:#28A745}
+.ck-summary{position:sticky;top:80px}
+.ck-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F0F0F0}
+.ck-item:last-child{border:none}
+.ck-item-img{width:60px;height:60px;background:#F5F5F5;border-radius:8px;overflow:hidden;flex-shrink:0}
+.ck-item-img img{width:100%;height:100%;object-fit:contain}
+.ck-item-info{flex:1}
+.ck-item-name{font-size:12px;font-weight:500;margin-bottom:4px;line-height:1.3}
+.ck-item-qty{font-size:11px;color:#888}
+.ck-item-price{font-size:14px;font-weight:700;color:#E87A1D}
+.ck-totals{border-top:2px solid #E8E8E8;padding-top:16px;margin-top:16px}
+.ck-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
+.ck-row.total{font-size:18px;font-weight:700;color:#1B3A5C;margin-top:12px;padding-top:12px;border-top:1px solid #E8E8E8}
+.ck-row.total span:last-child{color:#E87A1D}
+.ck-btn{width:100%;padding:14px;background:#E87A1D;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;margin-top:16px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.ck-btn:hover{background:#D06A10}.ck-btn:disabled{background:#ccc;cursor:not-allowed}
+.ck-btn.secondary{background:#1B3A5C}.ck-btn.secondary:hover{background:#122840}
+.ck-secure{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#888;margin-top:12px}
+.ck-secure svg{color:#28A745}
+/* Card Form Styles */
+.card-form{background:#F8F8F8;border-radius:12px;padding:20px;margin-top:16px}
+.card-brands{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.card-brand{width:40px;height:26px;background:#fff;border:1px solid #E8E8E8;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#444}
+.card-brand.active{border-color:#E87A1D;background:#FFF3E8}
+.mp-field{background:#fff;border:1.5px solid #D1D1D1;border-radius:8px;padding:12px 14px;margin-bottom:12px;min-height:44px}
+.mp-field:focus-within{border-color:#E87A1D}
+.mp-field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.installments-select{width:100%;padding:12px 14px;border:1.5px solid #D1D1D1;border-radius:8px;font-family:'Outfit',sans-serif;font-size:14px;background:#fff;cursor:pointer}
+.installments-select:focus{border-color:#E87A1D;outline:none}
+/* Address Form */
+.address-saved{background:#F0FFF4;border:2px solid #28A745;border-radius:12px;padding:16px;margin-bottom:16px}
+.address-saved h4{font-size:14px;font-weight:600;color:#28A745;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.address-saved p{font-size:13px;color:#444;line-height:1.5}
+.address-edit{font-size:12px;color:#E87A1D;cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block}
+/* Error/Success Messages */
+.msg-error{background:#FFF0F0;border:1px solid #DC3545;color:#DC3545;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.msg-success{background:#F0FFF4;border:1px solid #28A745;color:#28A745;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+/* Payment Status */
+.payment-status{text-align:center;padding:32px}
+.payment-status .icon{font-size:64px;margin-bottom:16px}
+.payment-status h2{font-size:24px;font-weight:700;color:#1B3A5C;margin-bottom:8px}
+.payment-status p{font-size:14px;color:#666;margin-bottom:24px;line-height:1.6}
+.payment-status.success .icon{color:#28A745}
+.payment-status.pending .icon{color:#FFC107}
+.payment-status.error .icon{color:#DC3545}
+.order-details{background:#F8F8F8;border-radius:12px;padding:20px;text-align:left;margin-top:24px}
+.order-details h4{font-size:14px;font-weight:600;color:#1B3A5C;margin-bottom:12px}
+.order-details p{font-size:13px;color:#555;margin-bottom:6px}
+@media(max-width:768px){.checkout-grid{grid-template-columns:1fr}.ck-summary{position:static}}
 </style>
 </head>
 <body>
 <div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;background:#F8F6F3"><div style="text-align:center"><div style="font-size:32px;font-weight:900;color:#1B3A5C"><span style="color:#E87A1D">VAL</span>FRE</div><div style="margin-top:16px;width:40px;height:40px;border:3px solid #E8E8E8;border-top-color:#E87A1D;border-radius:50%;animation:spin .8s linear infinite;margin:16px auto"></div><p style="color:#888;font-size:14px;margin-top:8px">Carregando...</p></div></div></div>
 <script type="text/babel">
-const CFG={CNPJ:"52.749.158/0001-62",WA:"27998255545",IG:"@ferramentasvalfre",IG_URL:"https://instagram.com/ferramentasvalfre",WA_URL:"https://wa.me/5527998255545",STORE_URL:"https://www.ferramentasvalfre.com.br",USE_TINY:true};
+const CFG={CNPJ:"52.749.158/0001-62",WA:"27998255545",IG:"@ferramentasvalfre",IG_URL:"https://instagram.com/ferramentasvalfre",WA_URL:"https://wa.me/5527998255545",STORE_URL:"https://www.ferramentasvalfre.com.br",USE_TINY:true,MP_PUBLIC_KEY:"%%MERCADOPAGO_PUBLIC_KEY%%"};
 const CATS=[{id:11,name:"Ferramentas Manuais",icon:"\u{1F527}",slug:"ferramentasmanuais",ch:[{id:13,name:"Martelos",slug:"ferramentasmanuais/martelos"},{id:39,name:"Alicates",slug:"ferramentasmanuais/alicates"},{id:41,name:"Chaves",slug:"ferramentasmanuais/chaves-fenda-philips-allen-grifo"},{id:43,name:"Arcos de Serra",slug:"ferramentasmanuais/arcos-de-serra"},{id:45,name:"Serrotes",slug:"ferramentasmanuais/serrotes"},{id:47,name:"Colheres de Pedreiro",slug:"ferramentasmanuais/colheres-de-pedreiro"},{id:49,name:"Desempenadeiras",slug:"ferramentasmanuais/desempenadeiras"},{id:53,name:"Estiletes",slug:"ferramentasmanuais/estiletes"},{id:55,name:"Aplicadores de Fita",slug:"ferramentasmanuais/aplicadores-de-fita"},{id:57,name:"Magnetizadores",slug:"ferramentasmanuais/magnetizadores"},{id:59,name:"Ferramentas Diversas",slug:"ferramentasmanuais/ferramentas-diversas"},{id:69,name:"Politrizes",slug:"ferramentasmanuais/politrizes"},{id:139,name:"Medi\u00e7\u00e3o e Nivelamento",slug:"ferramentasmanuais/medicao-e-nivelamento"},{id:141,name:"Organiza\u00e7\u00e3o",slug:"ferramentasmanuais/organizacao-de-ferramentas"},{id:143,name:"Ilumina\u00e7\u00e3o Port\u00e1til",slug:"ferramentasmanuais/iluminacao-portatil"}]},{id:17,name:"Ferramentas El\u00e9tricas",icon:"\u26A1",slug:"ferramentas-eletricas",ch:[{id:61,name:"Furadeiras",slug:"ferramentas-eletricas/furadeiras"},{id:63,name:"Parafusadeiras",slug:"ferramentas-eletricas/parafusadeiras"},{id:65,name:"Esmerilhadeiras",slug:"ferramentas-eletricas/esmerilhadeiras"},{id:67,name:"Serras El\u00e9tricas",slug:"ferramentas-eletricas/serras-eletricas"},{id:71,name:"Acess\u00f3rios p/ Ferramentas",slug:"ferramentas-eletricas/acessorios-para-ferramentas-eletricas"},{id:145,name:"Lixadeiras",slug:"ferramentas-eletricas/lixadeiras"}]},{id:25,name:"Constru\u00e7\u00e3o e Obra",icon:"\u{1F3D7}\uFE0F",slug:"construcao-e-obra",ch:[{id:87,name:"Ferramentas p/ Pedreiro",slug:"construcao-e-obra/ferramentas-para-pedreiro"},{id:89,name:"Ferramentas p/ Pintura",slug:"construcao-e-obra/ferramentas-para-pintura"},{id:91,name:"Edi\u00e7\u00e3o e Nivelamento",slug:"construcao-e-obra/edicao-e-nivelamento"},{id:93,name:"Argamassa e Rejunte",slug:"construcao-e-obra/argamassa-e-rejunte"},{id:95,name:"Esp\u00e1tulas",slug:"construcao-e-obra/espatulas"},{id:97,name:"Desempenadeiras",slug:"construcao-e-obra/desempenadeiras"},{id:147,name:"Soldagem",slug:"construcao-e-obra/soldagem"}]},{id:23,name:"Acess\u00f3rios e Pe\u00e7as",icon:"\u{1F529}",slug:"acessorios-e-pecas",ch:[{id:73,name:"L\u00e2minas",slug:"acessorios-e-pecas/laminas"},{id:75,name:"Discos de Corte",slug:"acessorios-e-pecas/discos-de-corte"},{id:77,name:"Brocas",slug:"acessorios-e-pecas/brocas"},{id:79,name:"Mandris",slug:"acessorios-e-pecas/mandris"},{id:81,name:"Adaptadores",slug:"acessorios-e-pecas/adaptadores"},{id:83,name:"Extens\u00f5es",slug:"acessorios-e-pecas/extensoes"},{id:85,name:"Pe\u00e7as de Reposi\u00e7\u00e3o",slug:"acessorios-e-pecas/pecas-de-reposicao"}]},{id:27,name:"El\u00e9tricas",icon:"\u{1F4A1}",slug:"eletricas",ch:[{id:99,name:"Ilumina\u00e7\u00e3o",slug:"eletricas/iluminacao"},{id:101,name:"L\u00e2mpadas",slug:"eletricas/lampadas"},{id:103,name:"Soquetes",slug:"eletricas/soquetes"},{id:105,name:"Chuveiros",slug:"eletricas/chuveiros"},{id:107,name:"Disjuntores",slug:"eletricas/disjuntores"},{id:109,name:"Ebulidores",slug:"eletricas/ebulidores"},{id:111,name:"Extens\u00f5es El\u00e9tricas",slug:"eletricas/extensoes-eletricas"}]},{id:29,name:"Climatiza\u00e7\u00e3o",icon:"\u2744\uFE0F",slug:"climatizacao-e-eventilacao",ch:[{id:113,name:"Ventiladores",slug:"climatizacao-e-eventilacao/ventiladores"},{id:115,name:"Climatizadores",slug:"climatizacao-e-eventilacao/climatizadores"},{id:117,name:"Aquecedores",slug:"climatizacao-e-eventilacao/aquecedores"},{id:119,name:"Refrigera\u00e7\u00e3o",slug:"climatizacao-e-eventilacao/refrigeracao"}]},{id:37,name:"Automotivo",icon:"\u{1F697}",slug:"automotivo-e-manutencao",ch:[{id:129,name:"Lubrificantes",slug:"automotivo-e-manutencao/lubrificanes"},{id:131,name:"Aditivos",slug:"automotivo-e-manutencao/aditivos"},{id:133,name:"Manuten\u00e7\u00e3o Automotiva",slug:"automotivo-e-manutencao/manutencao-automotiva"}]},{id:31,name:"Casa e Organiza\u00e7\u00e3o",icon:"\u{1F3E0}",slug:"casa-e-organizacao",ch:[{id:121,name:"Organizadores",slug:"casa-e-organizacao/organizadores"},{id:123,name:"Suportes de Parede",slug:"casa-e-organizacao/suportes-de-parede"},{id:125,name:"Artigos de Cozinha",slug:"casa-e-organizacao/artigos-de-cozinha"},{id:127,name:"Utilidades Dom\u00e9sticas",slug:"casa-e-organizacao/utilidades-domesticas"}]},{id:35,name:"Constru\u00e7\u00e3o",icon:"\u{1F9F1}",slug:"construcao",ch:[]},{id:33,name:"Ofertas e Promo\u00e7\u00f5es",icon:"\u{1F3F7}\uFE0F",slug:"ofertas-e-promocoes",ch:[]}];
 const DEMO=[{id:1,name:"Furadeira de Impacto 750W",price:289.9,promotional_price:249.9,brand:"DeWalt",category_id:61,stock:15,description:"Furadeira profissional 750W com mandril 13mm.",description_small:"Furadeira 750W",model:"DWD024",weight:"3.2kg",warranty:"1 ano"},{id:2,name:"Jogo Chaves Allen 9 Pe\u00e7as",price:45.9,promotional_price:0,brand:"Tramontina",category_id:41,stock:30,description:"A\u00e7o cromo van\u00e1dio.",description_small:"Chaves Allen 9pcs",model:"44400",weight:"0.3kg",warranty:"Vital\u00edcia"},{id:3,name:"Esmerilhadeira Angular 850W",price:329.9,promotional_price:299.9,brand:"Bosch",category_id:65,stock:0,description:"Anti-vibra\u00e7\u00e3o 4\u00bd\".",description_small:"Esmerilhadeira Bosch",model:"GWS850",weight:"2.1kg",warranty:"1 ano"},{id:4,name:"Martelo Unha 27mm",price:59.9,promotional_price:0,brand:"Stanley",category_id:13,stock:25,description:"Cabo fibra de vidro.",description_small:"Martelo Stanley",model:"51-271",weight:"0.7kg",warranty:"Vital\u00edcia"},{id:5,name:"Serra Circular 1400W",price:499.9,promotional_price:459.9,brand:"Makita",category_id:67,stock:5,description:"Profissional 7\u00bc\".",description_small:"Serra Makita",model:"5007N",weight:"5.1kg",warranty:"1 ano"},{id:6,name:"Parafusadeira Bateria 12V",price:399.9,promotional_price:349.9,brand:"DeWalt",category_id:63,stock:12,description:"2 baterias inclu\u00eddas.",description_small:"Parafusadeira 12V",model:"DCD700",weight:"1.4kg",warranty:"2 anos"},{id:7,name:"Alicate Universal 8\"",price:39.9,promotional_price:0,brand:"Tramontina",category_id:39,stock:40,description:"Isolado 1000V.",description_small:"Alicate 8\"",model:"44050",weight:"0.35kg",warranty:"Vital\u00edcia"},{id:8,name:"Disco Corte 4\u00bd\" Pack 10",price:29.9,promotional_price:24.9,brand:"Norton",category_id:75,stock:50,description:"Metais ferrosos.",description_small:"Discos Norton",model:"BNA12",weight:"0.5kg",warranty:"N/A"},{id:9,name:"N\u00edvel Bolha 30cm",price:25.9,promotional_price:0,brand:"Vonder",category_id:139,stock:20,description:"Base magn\u00e9tica.",description_small:"N\u00edvel Vonder",model:"363",weight:"0.2kg",warranty:"6 meses"},{id:10,name:"Lixadeira Orbital 200W",price:199.9,promotional_price:179.9,brand:"Black+Decker",category_id:145,stock:10,description:"Coleta de p\u00f3.",description_small:"Lixadeira B&D",model:"QS800",weight:"1.6kg",warranty:"2 anos"},{id:11,name:"Ventilador Mesa 40cm",price:159.9,promotional_price:139.9,brand:"Ventisol",category_id:113,stock:0,description:"3 velocidades.",description_small:"Ventilador 40cm",model:"V40D",weight:"3.5kg",warranty:"1 ano"},{id:12,name:"Kit Pedreiro 5 Pe\u00e7as",price:89.9,promotional_price:0,brand:"Vonder",category_id:87,stock:15,description:"Kit completo.",description_small:"Kit pedreiro",model:"KP5",weight:"2kg",warranty:"3 meses"},{id:13,name:"Jogo Brocas HSS 13pcs",price:69.9,promotional_price:59.9,brand:"Bosch",category_id:77,stock:22,description:"1,5 a 6,5mm.",description_small:"Brocas HSS",model:"HSS-G",weight:"0.2kg",warranty:"N/A"},{id:14,name:"Extens\u00e3o El\u00e9trica 10m",price:49.9,promotional_price:0,brand:"Daneva",category_id:111,stock:30,description:"3 tomadas.",description_small:"Extens\u00e3o 10m",model:"DN1610",weight:"1kg",warranty:"3 meses"},{id:15,name:"WD-40 Spray 300ml",price:34.9,promotional_price:29.9,brand:"WD-40",category_id:129,stock:35,description:"Multiuso.",description_small:"WD-40",model:"300ml",weight:"0.4kg",warranty:"N/A"},{id:16,name:"Suporte TV 32-55\"",price:129.9,promotional_price:109.9,brand:"ELG",category_id:123,stock:14,description:"Articulado.",description_small:"Suporte ELG",model:"A02V4N",weight:"2.8kg",warranty:"5 anos"}];
 
@@ -157,18 +211,71 @@ async getProduct(id){
     return data?TinyAPI.parse(data):null;
   }catch(e){console.error("Tiny getProduct Error:",e);return null;}
 },
-addToCart(p,qty){
-  // Para Tiny, apenas gerencia carrinho local - checkout redireciona para WhatsApp
-  console.log("Produto adicionado ao carrinho:",p.name,"Qtd:",qty);
-  return true;
+// Cadastrar cliente no Tiny
+async cadastrarCliente(dados){
+  try{
+    const r=await fetch("/api/cliente",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(dados)
+    });
+    return await r.json();
+  }catch(e){console.error("Erro ao cadastrar cliente:",e);return{error:"Erro de conexão"};}
+},
+// Buscar cliente por CPF/CNPJ
+async buscarCliente(cpf_cnpj){
+  try{
+    const r=await fetch("/api/cliente?cpf_cnpj="+encodeURIComponent(cpf_cnpj));
+    if(!r.ok)return null;
+    return await r.json();
+  }catch(e){console.error("Erro ao buscar cliente:",e);return null;}
+},
+// Verificar estoque do carrinho
+async verificarEstoque(itens){
+  try{
+    const r=await fetch("/api/estoque",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({itens:itens.map(i=>({id:i.id,nome:i.name,quantidade:i.quantity}))})
+    });
+    return await r.json();
+  }catch(e){console.error("Erro ao verificar estoque:",e);return{todos_disponiveis:false,error:"Erro de conexão"};}
+},
+// Processar pagamento
+async processarPagamento(dados){
+  try{
+    const r=await fetch("/api/pagamento",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(dados)
+    });
+    return await r.json();
+  }catch(e){console.error("Erro ao processar pagamento:",e);return{error:"Erro de conexão"};}
+},
+// Criar pedido no Tiny
+async criarPedido(dados){
+  try{
+    const r=await fetch("/api/pedido",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(dados)
+    });
+    return await r.json();
+  }catch(e){console.error("Erro ao criar pedido:",e);return{error:"Erro de conexão"};}
+},
+// Obter config do MP
+async getConfig(){
+  try{
+    const r=await fetch("/api/config");
+    return await r.json();
+  }catch(e){return{};}
 },
 getSID(){
   let s=null;
   try{s=window.sessionStorage.getItem("tiny_sid");}catch(e){}
   if(!s){s="t"+Date.now()+Math.random().toString(36).substr(2,8);try{window.sessionStorage.setItem("tiny_sid",s);}catch(e){}}
   return s;
-},
-ckURL(){return CFG.STORE_URL||CFG.WA_URL;}
+}
 };
 // Alias para compatibilidade
 const TrayAPI=TinyAPI;
@@ -181,11 +288,16 @@ function PC({p,onClick,onAdd}){const hp=p.promotional_price>0&&p.promotional_pri
 function fmtCNPJ(v){return v.replace(/\D/g,'').replace(/(\d{2})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1/$2').replace(/(\d{4})(\d)/,'$1-$2').substring(0,18);}
 function fmtPhone(v){return v.replace(/\D/g,'').replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2').substring(0,15);}
 function fmtCEP(v){return v.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').substring(0,9);}
-function AuthPage({nav,initTab}){const[tab,setTab]=React.useState(initTab||'login');const[pType,setPType]=React.useState('cpf');const[loading,setLoading]=React.useState(false);const[success,setSuccess]=React.useState(false);const[errMsg,setErrMsg]=React.useState('');const[lEmail,setLEmail]=React.useState('');const[lPass,setLPass]=React.useState('');const[rName,setRName]=React.useState('');const[rDoc,setRDoc]=React.useState('');const[rEmail,setREmail]=React.useState('');const[rPhone,setRPhone]=React.useState('');const switchTab=(t)=>{setTab(t);setErrMsg('');setSuccess(false);};
-const handleLogin=(e)=>{e.preventDefault();if(!lEmail||!lPass){setErrMsg('Preencha e-mail e senha.');return;}window.open(CFG.WA_URL+'?text=Olá! Gostaria de acessar minha conta. E-mail: '+encodeURIComponent(lEmail),'_blank');setSuccess(true);};
-const handleRegister=async(e)=>{e.preventDefault();if(!rName||!rDoc||!rEmail||!rPhone){setErrMsg('Preencha os campos obrigatórios.');return;}setLoading(true);setErrMsg('');
-const msg='Olá! Gostaria de me cadastrar.%0ANome: '+encodeURIComponent(rName)+'%0ACPF: '+encodeURIComponent(rDoc)+'%0AE-mail: '+encodeURIComponent(rEmail)+'%0ATelefone: '+encodeURIComponent(rPhone);window.open(CFG.WA_URL+'?text='+msg,'_blank');setLoading(false);setSuccess(true);};
-if(success)return(<div className="auth-page"><button className="back-btn" onClick={()=>nav('home')}>← Voltar</button><div className="auth-card"><div className="auth-success"><div className="icon">{tab==='login'?'🔓':'✅'}</div><h3>{tab==='login'?'Redirecionando para WhatsApp...':'Redirecionando para cadastro!'}</h3><p>Você será atendido pelo WhatsApp da Ferramentas Valfre.</p><button className="auth-btn" style={{marginTop:20,width:'auto',padding:'11px 32px'}} onClick={()=>nav('home')}>OK</button></div></div></div>);
+function AuthPage({nav,initTab,onLogin}){const[tab,setTab]=React.useState(initTab||'login');const[pType,setPType]=React.useState('cpf');const[loading,setLoading]=React.useState(false);const[success,setSuccess]=React.useState(false);const[errMsg,setErrMsg]=React.useState('');const[lDoc,setLDoc]=React.useState('');const[rName,setRName]=React.useState('');const[rDoc,setRDoc]=React.useState('');const[rEmail,setREmail]=React.useState('');const[rPhone,setRPhone]=React.useState('');const[rCep,setRCep]=React.useState('');const[rLogradouro,setRLogradouro]=React.useState('');const[rNumero,setRNumero]=React.useState('');const[rComplemento,setRComplemento]=React.useState('');const[rBairro,setRBairro]=React.useState('');const[rCidade,setRCidade]=React.useState('');const[rUf,setRUf]=React.useState('');const switchTab=(t)=>{setTab(t);setErrMsg('');setSuccess(false);};
+const buscarCep=async(cep)=>{const c=cep.replace(/\D/g,'');if(c.length!==8)return;try{const r=await fetch('https://viacep.com.br/ws/'+c+'/json/');const d=await r.json();if(!d.erro){setRLogradouro(d.logradouro||'');setRBairro(d.bairro||'');setRCidade(d.localidade||'');setRUf(d.uf||'');}}catch(e){}};
+const handleLogin=async(e)=>{e.preventDefault();if(!lDoc){setErrMsg('Preencha seu CPF/CNPJ.');return;}setLoading(true);setErrMsg('');
+const result=await TinyAPI.buscarCliente(lDoc);setLoading(false);
+if(result&&result.success&&result.cliente){const user={...result.cliente,loggedIn:true};try{localStorage.setItem('valfre_user',JSON.stringify(user));}catch(e){}if(onLogin)onLogin(user);setSuccess(true);}else{setErrMsg('CPF/CNPJ não encontrado. Faça seu cadastro primeiro.');}};
+const handleRegister=async(e)=>{e.preventDefault();if(!rName||!rDoc||!rEmail||!rPhone){setErrMsg('Preencha os campos obrigatórios.');return;}if(!rCep||!rLogradouro||!rNumero||!rBairro||!rCidade||!rUf){setErrMsg('Preencha o endereço completo.');return;}setLoading(true);setErrMsg('');
+const dados={nome:rName,cpf_cnpj:rDoc,email:rEmail,telefone:rPhone,endereco:{cep:rCep,logradouro:rLogradouro,numero:rNumero,complemento:rComplemento,bairro:rBairro,cidade:rCidade,uf:rUf}};
+const result=await TinyAPI.cadastrarCliente(dados);setLoading(false);
+if(result.success){const user={...result.cliente,...dados,loggedIn:true};try{localStorage.setItem('valfre_user',JSON.stringify(user));}catch(e){}if(onLogin)onLogin(user);setSuccess(true);}else{setErrMsg(result.error||'Erro ao cadastrar. Tente novamente.');}};
+if(success)return(<div className="auth-page"><button className="back-btn" onClick={()=>nav('home')}>← Voltar</button><div className="auth-card"><div className="auth-success"><div className="icon">{tab==='login'?'🔓':'✅'}</div><h3>{tab==='login'?'Login realizado!':'Cadastro realizado!'}</h3><p>Você já pode finalizar suas compras.</p><button className="auth-btn" style={{marginTop:20,width:'auto',padding:'11px 32px'}} onClick={()=>nav('home')}>Continuar Comprando</button></div></div></div>);
 return(<div className="auth-page"><button className="back-btn" onClick={()=>nav('home')}>← Voltar</button><div className="auth-card"><h2>{tab==='login'?'Entrar na sua conta':'Criar minha conta'}</h2><p className="sub">{tab==='login'?'Acesse pedidos e suas compras':'Cadastre-se para comprar'}</p><div className="auth-tabs"><button className={'auth-tab'+(tab==='login'?' active':'')} onClick={()=>switchTab('login')}>Entrar</button><button className={'auth-tab'+(tab==='register'?' active':'')} onClick={()=>switchTab('register')}>Cadastrar</button></div>
 {tab==='login'&&(<form onSubmit={handleLogin}><div className="form-grp"><label>E-mail *</label><input type="email" placeholder="seu@email.com" value={lEmail} onChange={e=>setLEmail(e.target.value)}/></div><div className="form-grp"><label>Senha *</label><input type="password" placeholder="Sua senha" value={lPass} onChange={e=>setLPass(e.target.value)}/></div>{errMsg&&<div style={{color:'#DC3545',fontSize:12,marginBottom:12}}>{errMsg}</div>}<button className="auth-btn" type="submit">Entrar</button><div className="auth-sep">ou</div><div className="auth-link">Não tem conta? <a onClick={()=>switchTab('register')}>Cadastre-se</a></div></form>)}
 {tab==='register'&&(<form onSubmit={handleRegister}><div className="form-grp"><label>Nome Completo *</label><input type="text" placeholder="Nome completo" value={rName} onChange={e=>setRName(e.target.value)}/></div><div className="form-grp"><label>CPF *</label><input type="text" placeholder="000.000.000-00" value={rDoc} onChange={e=>setRDoc(fmtCPF(e.target.value))}/></div><div className="form-grp"><label>E-mail *</label><input type="email" placeholder="seu@email.com" value={rEmail} onChange={e=>setREmail(e.target.value)}/></div><div className="form-grp"><label>Celular *</label><input type="text" placeholder="(00) 00000-0000" value={rPhone} onChange={e=>setRPhone(fmtPhone(e.target.value))}/></div>{errMsg&&<div style={{color:'#DC3545',fontSize:12,marginBottom:12}}>{errMsg}</div>}<button className="auth-btn" type="submit" disabled={loading}>{loading&&<span className="spinner-inline"/>}Criar Conta</button><p style={{fontSize:11,color:'#888',marginTop:12,textAlign:'center'}}>Você será redirecionado para a página segura de cadastro da Tray.</p><div className="auth-link" style={{marginTop:12}}>Já tem conta? <a onClick={()=>switchTab('login')}>Entrar</a></div></form>)}</div></div>);}
