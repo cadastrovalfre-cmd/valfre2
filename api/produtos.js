@@ -1,54 +1,50 @@
+import {
+  fetchTinyProdutosPagina,
+  fetchTinyProdutosTodos,
+  mapTinyProduto,
+  tinyRequest,
+} from './_lib/tiny.js';
+
+async function enrichProdutoDetalhado(item) {
+  const id = item?.id || item?.produto?.id;
+  if (!id) return mapTinyProduto(item);
+
+  const retornoDetalhe = await tinyRequest('produto.obter', { id });
+  return mapTinyProduto(retornoDetalhe?.produto || item);
+}
+
 export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Método não permitido' });
+  }
+
   try {
-    const page = req.query.page || 1;
+    const pagina = Number(req.query.page || 1);
+    const limite = Number(req.query.limit || 50);
+    const termo = req.query.q || '';
+    const all = ['1', 'true', 'yes'].includes(String(req.query.all || '').toLowerCase());
+    const detalhes = ['1', 'true', 'yes'].includes(String(req.query.detalhes || '').toLowerCase());
 
-    // Faz a requisição para a API da Tray
-    const response = await fetch(
-      "https://1225878.commercesuite.com.br/web_api/products?limit=50&page=" + page
-    );
+    const resultado = all
+      ? await fetchTinyProdutosTodos({ limite, pesquisa: termo })
+      : await fetchTinyProdutosPagina({ pagina, limite, pesquisa: termo });
 
-    const data = await response.json();
+    const baseProdutos = resultado?.produtos || [];
 
-    if (!data || !data.Products) {
-      return res.status(200).json([]);
-    }
+    const produtos = detalhes
+      ? await Promise.all(baseProdutos.map((item) => enrichProdutoDetalhado(item)))
+      : baseProdutos.map(mapTinyProduto);
 
-    // Filtra e formata os produtos que vão para o frontend
-    const products = data.Products.map((item) => {
-      const p = item.Product || {};
-
-      return {
-        id: Number(p.id) || 0,
-        name: p.name || "",
-        price: Number(p.price) || 0,
-        promotional_price: Number(p.promotional_price) || 0,
-        brand: p.brand || "",
-        category_id: Number(p.category_id) || 0,
-        stock: Number(p.stock) || 0,
-        description: p.description || "",
-        description_small: p.description_small || "",
-        model: p.model || "",
-        weight: p.weight || "",
-        warranty: p.warranty || "",
-        ean: p.ean || "",
-        slug: p.slug || "",
-        image:
-          p.ProductImage?.[0]?.https ||
-          p.ProductImage?.[0]?.http ||
-          null,
-        // ADICIONADO: Captura as variações se a Tray as enviar
-        variations: p.Variant 
-          ? (Array.isArray(p.Variant) 
-              ? p.Variant.map(v => v.Variant || v) 
-              : [p.Variant.Variant || p.Variant]) 
-          : []
-      };
+    return res.status(200).json({
+      pagina: all ? 1 : pagina,
+      limite,
+      totalPaginas: Number(resultado?.numero_paginas || resultado?.totalPaginas || 1),
+      totalRegistros: produtos.length,
+      origem: 'tiny',
+      produtos,
     });
-
-    res.status(200).json(products);
-
   } catch (error) {
-    console.error("Tray API ERROR:", error);
-    res.status(500).json({ error: "Erro ao buscar produtos da Tray" });
+    console.error('Erro /api/produtos:', error);
+    return res.status(500).json({ error: error.message || 'Erro ao listar produtos no Tiny' });
   }
 }
