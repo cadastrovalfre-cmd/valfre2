@@ -190,15 +190,47 @@ return(<div className="app-container">
 <div className="sec-hdr"><h2 className="sec-title">Mais Produtos</h2></div><div className="p-grid">{prods.slice(8,16).map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>
 </>)}
 {pg==="category"&&sC&&(<><button className="back-btn" onClick={()=>{if(sSub)nav("category",sC);else nav("home");}}><I.AL/> Voltar</button><div className="sec-hdr"><h2 className="sec-title">{sC.icon} {sSub?sSub.name:sC.name}</h2></div><div className="cp-layout"><aside className="f-side"><div className="f-title">Filtros</div>{sC.ch.length>0&&<div className="f-grp"><h4>Subcategorias</h4><label className="f-opt" style={{fontWeight:sSub===null?700:400,color:sSub===null?'#E87A1D':'#555'}} onClick={()=>nav("category",sC)}><input type="radio" name="sc" checked={sSub===null} readOnly/> Todas</label>{sC.ch.map(ch=><label key={ch.id} className="f-opt" style={{fontWeight:sSub?.id===ch.id?700:400,color:sSub?.id===ch.id?'#E87A1D':'#555'}} onClick={()=>nav("category",sC,ch)}><input type="radio" name="sc" checked={sSub?.id===ch.id} readOnly/> {ch.name}</label>)}</div>}<div className="f-grp"><h4>Ordenar</h4><select className="f-sel" value={sb} onChange={e=>sSB(e.target.value)}><option value="relevance">Relevância</option><option value="price-asc">Menor Preço</option><option value="price-desc">Maior Preço</option><option value="name">Nome A-Z</option></select></div></aside><div>{gF(sC.id,sSub?.id).length>0?<div className="p-grid" style={{gridTemplateColumns:"repeat(3,1fr)"}}>{gF(sC.id,sSub?.id).map(p=><PC key={p.id} p={p} onClick={p=>nav("product",p)} onAdd={addC}/>)}</div>:<div style={{textAlign:"center",padding:48,color:"#888"}}><p style={{fontSize:40}}>🔍</p><p style={{marginTop:12}}>Nenhum produto nesta categoria.</p></div>}</div></div></>)}
-{pg==="product"&&sP&&(()=>{const p=sP;const hp=(p.promotional_price||0)>0&&(p.promotional_price||0)<(p.price||0);const dp=hp?p.promotional_price:p.price;const pix=dp*0.9;const inst=Math.min(12,Math.max(1,Math.floor(dp/20)));const pc=CATS.find(c=>c.ch.some(x=>x.id===p.category_id)||c.id===p.category_id)||null;const rel=prods.filter(x=>x.id!==p.id).slice(0,4);const totalStk=(p.variations&&p.variations.length>0)?p.variations.reduce((s,v)=>s+(Number(v.stock)||0),0):(p.stock||0);const oos=totalStk<=0;
-  return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("home")}><I.AL/> Voltar</button>
+{pg==="product"&&sP&&(()=>{
+const p=sP;
+const isVar=p.variations&&p.variations.length>0;
+
+// Pega preço e estoque da variação selecionada (se houver)
+const activePrice=selVar&&selVar.price>0?Number(selVar.price):p.price;
+const activePromo=selVar&&selVar.promotional_price>0?Number(selVar.promotional_price):p.promotional_price;
+const hp=(activePromo||0)>0&&(activePromo||0)<(activePrice||0);
+const dp=hp?activePromo:activePrice;
+const pix=dp*0.9;
+const inst=Math.min(12,Math.max(1,Math.floor(dp/20)));
+const pc=CATS.find(c=>c.ch.some(x=>x.id===p.category_id)||c.id===p.category_id)||null;
+const rel=prods.filter(x=>x.id!==p.id).slice(0,4);
+
+// Se tem variação mas não selecionou, assume estoque 1 para NÃO bloquear a tela. 
+// Se selecionou, pega o estoque exato da variação escolhida.
+const activeStock=selVar?Number(selVar.stock||0):(isVar?1:(p.stock||0));
+const oos=activeStock<=0;
+
+const handleAdd=()=>{
+  if(isVar&&!selVar){
+    alert("Por favor, selecione uma opção (variação) antes de comprar!");
+    return;
+  }
+  const varName=selVar&&selVar.Sku&&selVar.Sku.length>0?selVar.Sku.map(s=>s.value).join(" - "):("Opção "+selVar?.id);
+  const itemToAdd=selVar?{...p, variations:[], stock:activeStock, variation_id:selVar.id, name:p.name+" ("+varName+")", price:activePrice, promotional_price:activePromo}:p;
+  addC(itemToAdd);
+};
+
+return(<><button className="back-btn" onClick={()=>sC?nav("category",sC):nav("home")}><I.AL/> Voltar</button>
 <div className="pd-wrap"><div className="pd-img"><img src={gImg(p)} alt={p.name}/></div><div className="pd-info">
 <div className="pd-bc"><span onClick={()=>nav("home")}>Início</span> › {pc&&<><span onClick={()=>nav("category",pc)}>{pc.name}</span> › </>}<span>{p.name}</span></div>
 <div className="pd-brand">{p.brand}</div><h1 className="pd-name">{p.name}</h1>
 <div className="pd-sku">REF: VAL-{String(p.id).padStart(6,"0")}{p.ean&&` | EAN: ${p.ean}`}</div>
 <div style={{display:"flex",gap:2,marginBottom:10}}>{[1,2,3,4,5].map(i=><I.St key={i} f={i<=4}/>)}<span style={{fontSize:10,color:"#888",marginLeft:4}}>(4.0)</span></div>
-<div className="pd-pa">{hp&&<div className="pd-olp">de {fmt(p.price)}</div>}<div className="pd-pr">{fmt(dp)}</div>{inst>1&&<div className="pd-inst">ou até <b>{inst}x de {fmt(dp/inst)}</b> sem juros</div>}<div className="pd-pix">{fmt(pix)} à vista no PIX (10% desc.)</div></div>{p.variations&&p.variations.length>0&&(<div style={{marginBottom:16,background:'#fff',padding:12,borderRadius:12,border:'1px solid #E8E8E8'}}><div style={{fontSize:13,fontWeight:600,marginBottom:8,color:'#1B3A5C'}}>Selecione a Opção:</div><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{p.variations.map(v=>{const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);const isSelected=selVar?.id===v.id;return(<button key={v.id} onClick={()=>setSelVar(v)} style={{padding:'8px 16px',border:isSelected?'2px solid #E87A1D':'2px solid #D1D1D1',borderRadius:8,background:isSelected?'#FFF3E8':'#fff',color:isSelected?'#E87A1D':'#444',cursor:'pointer',fontWeight:isSelected?700:500,fontFamily:'Outfit, sans-serif'}}>{varName}</button>)})}</div></div>)}
-{oos?<><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>:<><div className={"pd-stk in"}><span className="dot"/> Em estoque{totalStk?` — ${totalStk} un`:""}</div><div className="pd-btns"><button className="pd-ac" onClick={()=>addC(p)}>Adicionar ao Carrinho</button><button className="pd-bn" onClick={()=>{addC(p);ck();}}>Comprar Agora</button></div></>}<FreteCalc/>
+<div className="pd-pa">{hp&&<div className="pd-olp">de {fmt(activePrice)}</div>}<div className="pd-pr">{fmt(dp)}</div>{inst>1&&<div className="pd-inst">ou até <b>{inst}x de {fmt(dp/inst)}</b> sem juros</div>}<div className="pd-pix">{fmt(pix)} à vista no PIX (10% desc.)</div></div>
+
+{isVar&&(<div style={{marginBottom:16,background:'#fff',padding:12,borderRadius:12,border:'1px solid #E8E8E8'}}><div style={{fontSize:13,fontWeight:600,marginBottom:8,color:'#1B3A5C'}}>Selecione a Opção:</div><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{p.variations.map(v=>{const varName=v.Sku&&v.Sku.length>0?v.Sku.map(s=>s.value).join(" - "):("Opção " + v.id);const isSelected=selVar?.id===v.id;return(<button key={v.id} onClick={()=>setSelVar(v)} style={{padding:'8px 16px',border:isSelected?'2px solid #E87A1D':'2px solid #D1D1D1',borderRadius:8,background:isSelected?'#FFF3E8':'#fff',color:isSelected?'#E87A1D':'#444',cursor:'pointer',fontWeight:isSelected?700:500,fontFamily:'Outfit, sans-serif'}}>{varName}</button>)})}</div></div>)}
+
+{oos?<><div className={"pd-stk out"}><span className="dot"/> Produto indisponível</div><OOSNotify/></>:<><div className={"pd-stk in"}><span className="dot"/> Em estoque{activeStock>0?` — ${activeStock} un`:""}</div><div className="pd-btns"><button className="pd-ac" onClick={handleAdd}>Adicionar ao Carrinho</button><button className="pd-bn" onClick={()=>{handleAdd(); if(!(isVar&&!selVar)) ck();}}>Comprar Agora</button></div></>}
+<FreteCalc/>
 </div></div>
 <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:24}}><div className="pd-tabs"><button className={"pd-tab"+(pdt==="desc"?" active":"")} onClick={()=>sPDT("desc")}>Descrição</button><button className={"pd-tab"+(pdt==="ficha"?" active":"")} onClick={()=>sPDT("ficha")}>Ficha Técnica</button></div><div className="pd-tc">{pdt==="desc"&&<><h3>Descrição</h3><div dangerouslySetInnerHTML={{ __html: p.description || "Produto disponível na Ferramentas Valfre." }} /></>}{pdt==="ficha"&&<><h3>Ficha Técnica</h3><table><tbody>{p.brand&&<tr><td>Marca</td><td>{p.brand}</td></tr>}{p.model&&<tr><td>Modelo</td><td>{p.model}</td></tr>}{p.weight&&<tr><td>Peso</td><td>{p.weight}</td></tr>}{p.warranty&&<tr><td>Garantia</td><td>{p.warranty}</td></tr>}<tr><td>Disponibilidade</td><td>{oos?'Indisponível':'Em estoque'}</td></tr></tbody></table></>}</div></div>
 <div className="sec-hdr"><h2 className="sec-title">Relacionados</h2></div><div className="p-grid">{rel.map(x=><PC key={x.id} p={x} onClick={x=>nav("product",x)} onAdd={addC}/>)}</div>
